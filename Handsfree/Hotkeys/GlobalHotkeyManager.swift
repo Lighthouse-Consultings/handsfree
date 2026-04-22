@@ -68,11 +68,11 @@ final class GlobalHotkeyManager {
         } else if flags.contains(.command) {
             mode = .emoji
         } else if useFnModifier && flags.contains(.option) {
-            // Fn + Option for rage when Fn is the trigger
-            mode = .rage
+            // Fn + Option → Compose when Fn is the trigger
+            mode = .compose
         } else if !useFnModifier && keyCode == 58 {
-            // 58 = kVK_Option (left option) — for Right-Option trigger, use Left-Option as Rage
-            mode = flags.contains(.option) ? .rage : nil
+            // 58 = kVK_Option (left option) — for Right-Option trigger, Left-Option = Compose
+            mode = flags.contains(.option) ? .compose : nil
         } else {
             mode = nil
         }

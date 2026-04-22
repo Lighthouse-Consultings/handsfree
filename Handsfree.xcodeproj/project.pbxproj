@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E81532E222BAA9E4CC3AB20 /* OllamaClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BEC1EAFA31F9D94BC9CA75 /* OllamaClient.swift */; };
 		117A95DB3526EBFF9E2EA0CB /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9B53112686F1667C108AC9 /* MenuBarView.swift */; };
 		162E37BD47CAF6F29302F9B2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4F5FED2CDCBCF9132A8061 /* SettingsView.swift */; };
 		27F34F50C0CAB84A7270C5F0 /* GlobalHotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3A3B7A0CBC7FF49B4C25B3 /* GlobalHotkeyManager.swift */; };
@@ -40,6 +41,7 @@
 		1680B5ACB91D55732E6671CF /* HandsfreeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HandsfreeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E5B472565629AF13CFB13AC /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		1EDF2BCE6F5CE1DF588BEBE8 /* TextInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInjector.swift; sourceTree = "<group>"; };
+		22BEC1EAFA31F9D94BC9CA75 /* OllamaClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OllamaClient.swift; sourceTree = "<group>"; };
 		2C3DF71A237251DD23E09A52 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
 		2F3A3B7A0CBC7FF49B4C25B3 /* GlobalHotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyManager.swift; sourceTree = "<group>"; };
 		3391ABAC286B39A9F4AFDD11 /* LLMClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMClient.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				3391ABAC286B39A9F4AFDD11 /* LLMClient.swift */,
+				22BEC1EAFA31F9D94BC9CA75 /* OllamaClient.swift */,
 			);
 			path = Postprocess;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 				967C1A2B437727FBC1969802 /* MenuBarController.swift in Sources */,
 				117A95DB3526EBFF9E2EA0CB /* MenuBarView.swift in Sources */,
 				76217616249F291DEF8B6616 /* Mode.swift in Sources */,
+				0E81532E222BAA9E4CC3AB20 /* OllamaClient.swift in Sources */,
 				ED726AB239075AEA15C8C621 /* Orchestrator.swift in Sources */,
 				47789A19B21A24C614D27312 /* Preferences.swift in Sources */,
 				162E37BD47CAF6F29302F9B2 /* SettingsView.swift in Sources */,

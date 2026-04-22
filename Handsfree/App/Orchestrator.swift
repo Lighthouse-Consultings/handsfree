@@ -7,6 +7,7 @@ final class Orchestrator {
     private let status: AppStatus
     private let recorder = AudioRecorder()
     private var hotkeys: GlobalHotkeyManager?
+    private var composeClipboardContext: String?
     private let log = Logger(subsystem: "com.lighthouseconsultings.handsfree", category: "orchestrator")
 
     init(status: AppStatus) {
@@ -69,6 +70,12 @@ final class Orchestrator {
         switch phase {
         case .begin:
             guard case .ready = status.state else { return }
+            // Snapshot clipboard at record-start for Compose mode.
+            if mode == .compose {
+                composeClipboardContext = NSPasteboard.general.string(forType: .string)
+            } else {
+                composeClipboardContext = nil
+            }
             status.activeMode = mode
             status.state = .recording
             do { try await recorder.start() }
@@ -94,13 +101,13 @@ final class Orchestrator {
 
             let raw = try await transcribe(wav: wav)
             let text: String
-            if mode == .raw {
+            switch mode {
+            case .raw:
                 text = raw
-            } else {
-                guard let anthropic = KeychainStore.get("anthropic_api_key") else {
-                    status.state = .error("Kein Anthropic API Key"); return
-                }
-                text = try await LLMClient(apiKey: anthropic).process(text: raw, mode: mode)
+            case .compose:
+                text = try await runCompose(instruction: raw, context: composeClipboardContext)
+            case .polished, .emoji:
+                text = try await runRewrite(text: raw, mode: mode)
             }
 
             try TextInjector.insert(text)
@@ -108,6 +115,57 @@ final class Orchestrator {
         } catch {
             log.error("pipeline: \(String(describing: error))")
             status.state = .error(String(describing: error).prefix(60).description)
+        }
+    }
+
+    private func runRewrite(text: String, mode: Mode) async throws -> String {
+        switch Preferences.llmBackend {
+        case .anthropic:
+            guard let key = KeychainStore.get("anthropic_api_key") else {
+                throw HandsfreeError.postprocess("Anthropic API Key fehlt")
+            }
+            return try await LLMClient(apiKey: key).process(text: text, mode: mode)
+        case .ollama:
+            let system = ollamaRewriteSystemPrompt(mode: mode)
+            return try await OllamaClient().generate(system: system, user: text)
+        }
+    }
+
+    private func runCompose(instruction: String, context: String?) async throws -> String {
+        let system = """
+        Du bist ein präziser Schreib-Assistent. Der Nutzer gibt dir eine Instruction
+        per Sprache, optional mit einem Clipboard-Text als Kontext. Liefere den
+        fertigen Text so, dass er sofort in eine E-Mail, Chat-Nachricht oder Notiz
+        eingefügt werden kann. Keine Meta-Kommentare, keine Anführungszeichen um
+        das Ergebnis, keine Einleitung wie "Hier ist…". Antworte in der Sprache,
+        in der die Instruction verfasst ist.
+        """
+        let user: String
+        if let ctx = context, !ctx.isEmpty {
+            user = "<clipboard>\n\(ctx)\n</clipboard>\n\n<instruction>\n\(instruction)\n</instruction>"
+        } else {
+            user = "<instruction>\n\(instruction)\n</instruction>"
+        }
+
+        switch Preferences.llmBackend {
+        case .anthropic:
+            guard let key = KeychainStore.get("anthropic_api_key") else {
+                throw HandsfreeError.postprocess("Anthropic API Key fehlt")
+            }
+            return try await LLMClient(apiKey: key).raw(system: system, user: user)
+        case .ollama:
+            return try await OllamaClient().generate(system: system, user: user)
+        }
+    }
+
+    private func ollamaRewriteSystemPrompt(mode: Mode) -> String {
+        switch mode {
+        case .polished:
+            return "Du bekommst gesprochenen Text. Schreibe ihn in sauberes Deutsch/Englisch um (je nach Sprache des Inputs). Entferne Füllwörter, glätte Satzbau. Antworte NUR mit dem umformulierten Text."
+        case .emoji:
+            return "Du bekommst gesprochenen Text. Behalte ihn originalgetreu bei und streue passende Emojis ein. Antworte NUR mit dem Text."
+        default:
+            return "Antworte NUR mit dem umformulierten Text."
         }
     }
 

@@ -1,9 +1,11 @@
 import Foundation
 
 enum TranscriptionBackend: String { case api, local }
+enum LLMBackend: String { case anthropic, ollama }
 
 enum Preferences {
     private static let backendKey = "handsfree.backend"
+    private static let llmBackendKey = "handsfree.llmBackend"
     static let didChangeNotification = Notification.Name("handsfree.preferences.didChange")
 
     static var backend: TranscriptionBackend {
@@ -13,6 +15,17 @@ enum Preferences {
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: backendKey)
+            NotificationCenter.default.post(name: didChangeNotification, object: nil)
+        }
+    }
+
+    static var llmBackend: LLMBackend {
+        get {
+            let raw = UserDefaults.standard.string(forKey: llmBackendKey) ?? LLMBackend.anthropic.rawValue
+            return LLMBackend(rawValue: raw) ?? .anthropic
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: llmBackendKey)
             NotificationCenter.default.post(name: didChangeNotification, object: nil)
         }
     }

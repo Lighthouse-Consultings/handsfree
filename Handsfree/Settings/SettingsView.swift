@@ -5,6 +5,7 @@ struct SettingsView: View {
     @State private var anthropic: String = KeychainStore.get("anthropic_api_key") ?? ""
     @State private var saved: Bool = false
     @State private var backend: TranscriptionBackend = Preferences.backend
+    @State private var llmBackend: LLMBackend = Preferences.llmBackend
     @State private var localAvailable: Bool = LocalWhisperClient.detect() != nil
     let onBack: () -> Void
 
@@ -36,6 +37,22 @@ struct SettingsView: View {
                         )
                         .font(.caption)
                         .foregroundStyle(localAvailable ? .green : .orange)
+                    }
+                }.padding(8)
+            }
+
+            GroupBox("LLM (für Polished / Emoji / Compose)") {
+                VStack(alignment: .leading, spacing: 8) {
+                    Picker("LLM", selection: $llmBackend) {
+                        Text("Anthropic API").tag(LLMBackend.anthropic)
+                        Text("Lokal (Ollama)").tag(LLMBackend.ollama)
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: llmBackend) { _, new in Preferences.llmBackend = new }
+
+                    if llmBackend == .ollama {
+                        Text("Modell: gemma4:latest via http://127.0.0.1:11434")
+                            .font(.caption).foregroundStyle(.secondary)
                     }
                 }.padding(8)
             }

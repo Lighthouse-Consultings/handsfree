@@ -42,6 +42,28 @@ struct LLMClient {
         return decoded.content.compactMap(\.text).joined()
     }
 
+    func raw(system: String, user: String) async throws -> String {
+        var request = URLRequest(url: URL(string: "https://api.anthropic.com/v1/messages")!)
+        request.httpMethod = "POST"
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let payload: [String: Any] = [
+            "model": model,
+            "max_tokens": 1024,
+            "system": system,
+            "messages": [["role": "user", "content": user]]
+        ]
+        request.httpBody = try JSONSerialization.data(withJSONObject: payload)
+        let (data, response) = try await Self.session.data(for: request)
+        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+            throw HandsfreeError.postprocess(truncatedError(data))
+        }
+        struct Block: Decodable { let text: String? }
+        struct R: Decodable { let content: [Block] }
+        return try JSONDecoder().decode(R.self, from: data).content.compactMap(\.text).joined()
+    }
+
     private func truncatedError(_ data: Data) -> String {
         let s = String(data: data, encoding: .utf8) ?? "unknown"
         return s.count > 200 ? String(s.prefix(200)) + "…" : s
@@ -67,13 +89,8 @@ struct LLMClient {
             behalte Bedeutung und Tonalität exakt bei.
             \(guardRail)
             """
-        case .rage:
-            return """
-            Du bekommst einen wütenden, gereizten deutschen Text im <user_speech>-Block.
-            Formuliere ihn höflich, professionell und freundlich um, ohne die inhaltliche
-            Botschaft zu verändern.
-            \(guardRail)
-            """
+        case .compose:
+            return nil  // Compose uses a different pipeline (instruction + optional clipboard context).
         case .emoji:
             return """
             Du bekommst gesprochenen deutschen Text im <user_speech>-Block. Behalte ihn
