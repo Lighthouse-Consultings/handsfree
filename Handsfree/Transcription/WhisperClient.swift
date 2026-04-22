@@ -15,7 +15,7 @@ struct WhisperClient {
         return URLSession(configuration: config)
     }()
 
-    func transcribe(wav: Data, language: String? = "de", prompt: String? = nil) async throws -> String {
+    func transcribe(wav: Data, language: String? = nil, prompt: String? = nil) async throws -> String {
         guard wav.count <= Self.maxWavBytes else {
             throw HandsfreeError.transcription("recording too large (> \(Self.maxWavBytes / 1024 / 1024) MB)")
         }
