@@ -6,10 +6,12 @@ struct SettingsView: View {
     @State private var saved: Bool = false
     @State private var backend: TranscriptionBackend = Preferences.backend
     @State private var llmBackend: LLMBackend = Preferences.llmBackend
+    @State private var styleGuide: String = Preferences.styleGuide
     @State private var localAvailable: Bool = LocalWhisperClient.detect() != nil
     let onBack: () -> Void
 
     var body: some View {
+        ScrollView {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Button(action: onBack) { Image(systemName: "chevron.left"); Text("Zurück") }
@@ -57,6 +59,17 @@ struct SettingsView: View {
                 }.padding(8)
             }
 
+            GroupBox("Stil-Vorgaben (wird an KI-Modi mitgegeben)") {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Dauerhafte Anweisungen für Polished / Emoji / Compose. Beispiel: Immer Sie-Form. LHC-Brand-Voice. Keine Em-Dashes. Signatur: Beste Grüße, Nico.")
+                        .font(.caption).foregroundStyle(.secondary)
+                    TextEditor(text: $styleGuide)
+                        .font(.body)
+                        .frame(minHeight: 80)
+                        .overlay(RoundedRectangle(cornerRadius: 4).stroke(Color.secondary.opacity(0.3)))
+                }.padding(8)
+            }
+
             GroupBox("API-Keys (Keychain)") {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("OpenAI (Whisper)").font(.caption).foregroundStyle(.secondary)
@@ -67,6 +80,7 @@ struct SettingsView: View {
                         Button("Speichern") {
                             if !openai.isEmpty { KeychainStore.set(openai, for: "openai_api_key") }
                             if !anthropic.isEmpty { KeychainStore.set(anthropic, for: "anthropic_api_key") }
+                            Preferences.styleGuide = styleGuide
                             Preferences.notifyChanged()
                             saved = true
                         }
@@ -95,6 +109,8 @@ struct SettingsView: View {
         }
         .padding(12)
         .frame(width: 320)
+        }
+        .frame(maxHeight: 520)
     }
 
     private func permissionRow(_ title: String, hint: String) -> some View {

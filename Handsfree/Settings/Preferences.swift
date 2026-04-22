@@ -6,7 +6,13 @@ enum LLMBackend: String { case anthropic, ollama }
 enum Preferences {
     private static let backendKey = "handsfree.backend"
     private static let llmBackendKey = "handsfree.llmBackend"
+    private static let styleGuideKey = "handsfree.styleGuide"
     static let didChangeNotification = Notification.Name("handsfree.preferences.didChange")
+
+    static var styleGuide: String {
+        get { UserDefaults.standard.string(forKey: styleGuideKey) ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: styleGuideKey) }
+    }
 
     static var backend: TranscriptionBackend {
         get {

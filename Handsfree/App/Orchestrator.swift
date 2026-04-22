@@ -78,8 +78,10 @@ final class Orchestrator {
             }
             status.activeMode = mode
             status.state = .recording
+            SoundFX.play(.start)
             do { try await recorder.start() }
             catch {
+                SoundFX.play(.failure)
                 status.state = .error("Aufnahme fehlgeschlagen")
                 log.error("recorder start: \(String(describing: error))")
             }
@@ -111,8 +113,10 @@ final class Orchestrator {
             }
 
             try TextInjector.insert(text)
+            SoundFX.play(.success)
             status.state = .ready
         } catch {
+            SoundFX.play(.failure)
             log.error("pipeline: \(String(describing: error))")
             status.state = .error(String(describing: error).prefix(60).description)
         }
@@ -132,7 +136,7 @@ final class Orchestrator {
     }
 
     private func runCompose(instruction: String, context: String?) async throws -> String {
-        let system = """
+        let base = """
         Du bist ein präziser Schreib-Assistent. Der Nutzer gibt dir eine Instruction
         per Sprache, optional mit einem Clipboard-Text als Kontext. Liefere den
         fertigen Text so, dass er sofort in eine E-Mail, Chat-Nachricht oder Notiz
@@ -140,6 +144,7 @@ final class Orchestrator {
         das Ergebnis, keine Einleitung wie "Hier ist…". Antworte in der Sprache,
         in der die Instruction verfasst ist.
         """
+        let system = base + styleGuideBlock()
         let user: String
         if let ctx = context, !ctx.isEmpty {
             user = "<clipboard>\n\(ctx)\n</clipboard>\n\n<instruction>\n\(instruction)\n</instruction>"
@@ -159,14 +164,21 @@ final class Orchestrator {
     }
 
     private func ollamaRewriteSystemPrompt(mode: Mode) -> String {
+        let base: String
         switch mode {
         case .polished:
-            return "Du bekommst gesprochenen Text. Schreibe ihn in sauberes Deutsch/Englisch um (je nach Sprache des Inputs). Entferne Füllwörter, glätte Satzbau. Antworte NUR mit dem umformulierten Text."
+            base = "Du bekommst gesprochenen Text. Schreibe ihn in sauberes Deutsch/Englisch um (je nach Sprache des Inputs). Entferne Füllwörter, glätte Satzbau. Antworte NUR mit dem umformulierten Text."
         case .emoji:
-            return "Du bekommst gesprochenen Text. Behalte ihn originalgetreu bei und streue passende Emojis ein. Antworte NUR mit dem Text."
+            base = "Du bekommst gesprochenen Text. Behalte ihn originalgetreu bei und streue passende Emojis ein. Antworte NUR mit dem Text."
         default:
-            return "Antworte NUR mit dem umformulierten Text."
+            base = "Antworte NUR mit dem umformulierten Text."
         }
+        return base + styleGuideBlock()
+    }
+
+    private func styleGuideBlock() -> String {
+        let style = Preferences.styleGuide.trimmingCharacters(in: .whitespacesAndNewlines)
+        return style.isEmpty ? "" : "\n\nZUSÄTZLICHE STIL-VORGABEN DES NUTZERS:\n\(style)\n"
     }
 
     private func transcribe(wav: Data) async throws -> String {
