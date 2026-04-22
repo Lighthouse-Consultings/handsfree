@@ -6,9 +6,9 @@ enum SoundFX {
     static func play(_ cue: Cue) {
         let name: String
         switch cue {
-        case .start:   name = "Pop"      // short click when recording begins
-        case .success: name = "Tink"     // subtle acknowledge when text inserted
-        case .failure: name = "Funk"     // error cue
+        case .start:   name = "Glass"    // bell chime when recording begins
+        case .success: name = "Hero"     // two-note ascending chime on success
+        case .failure: name = "Basso"    // soft low cue for errors
         }
         NSSound(named: NSSound.Name(name))?.play()
     }
