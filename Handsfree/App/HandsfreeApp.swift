@@ -9,10 +9,16 @@ struct HandsfreeApp: App {
     }
 }
 
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var menuBar: MenuBarController?
+    private var orchestrator: Orchestrator?
+    private let status = AppStatus()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        menuBar = MenuBarController()
+        menuBar = MenuBarController(appStatus: status)
+        let orch = Orchestrator(status: status)
+        orchestrator = orch
+        orch.startup()
     }
 }

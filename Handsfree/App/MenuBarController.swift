@@ -1,16 +1,21 @@
 import AppKit
 import SwiftUI
 
+@MainActor
 final class MenuBarController {
     private let statusItem: NSStatusItem
     private let popover: NSPopover
+    private let appStatus: AppStatus
 
-    init() {
+    init(appStatus: AppStatus) {
+        self.appStatus = appStatus
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         popover = NSPopover()
         popover.behavior = .transient
-        popover.contentSize = NSSize(width: 320, height: 380)
-        popover.contentViewController = NSHostingController(rootView: MenuBarView())
+        popover.contentSize = NSSize(width: 320, height: 420)
+        popover.contentViewController = NSHostingController(
+            rootView: MenuBarView().environmentObject(appStatus)
+        )
 
         if let button = statusItem.button {
             button.image = NSImage(systemSymbolName: "waveform", accessibilityDescription: "Handsfree")

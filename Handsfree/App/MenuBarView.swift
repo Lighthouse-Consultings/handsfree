@@ -1,12 +1,25 @@
 import SwiftUI
 
 struct MenuBarView: View {
+    @EnvironmentObject var status: AppStatus
+    @State private var showSettings = false
+
     var body: some View {
+        Group {
+            if showSettings {
+                SettingsView { showSettings = false }
+            } else {
+                main
+            }
+        }
+    }
+
+    private var main: some View {
         VStack(alignment: .leading, spacing: 0) {
             header
             Divider()
             ForEach(Mode.allCases, id: \.self) { mode in
-                ModeRow(mode: mode)
+                ModeRow(mode: mode, isActive: status.activeMode == mode)
                 Divider()
             }
             footer
@@ -19,8 +32,8 @@ struct MenuBarView: View {
         HStack {
             Text("Handsfree").font(.headline)
             Spacer()
-            Circle().fill(.green).frame(width: 8, height: 8)
-            Text("Bereit").font(.caption).foregroundStyle(.secondary)
+            Circle().fill(status.statusColor).frame(width: 8, height: 8)
+            Text(status.statusText).font(.caption).foregroundStyle(.secondary)
         }
         .padding(.horizontal, 12)
         .padding(.bottom, 8)
@@ -28,7 +41,7 @@ struct MenuBarView: View {
 
     private var footer: some View {
         HStack {
-            Button("Einstellungen") {}
+            Button("Einstellungen") { showSettings = true }
             Spacer()
             Button("Beenden") { NSApp.terminate(nil) }
         }
@@ -39,6 +52,7 @@ struct MenuBarView: View {
 
 private struct ModeRow: View {
     let mode: Mode
+    let isActive: Bool
 
     var body: some View {
         HStack(spacing: 12) {
@@ -55,5 +69,6 @@ private struct ModeRow: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
+        .background(isActive ? Color.accentColor.opacity(0.12) : .clear)
     }
 }
