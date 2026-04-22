@@ -4,6 +4,8 @@ struct SettingsView: View {
     @State private var openai: String = KeychainStore.get("openai_api_key") ?? ""
     @State private var anthropic: String = KeychainStore.get("anthropic_api_key") ?? ""
     @State private var saved: Bool = false
+    @State private var backend: TranscriptionBackend = Preferences.backend
+    @State private var localAvailable: Bool = LocalWhisperClient.detect() != nil
     let onBack: () -> Void
 
     var body: some View {
@@ -14,6 +16,28 @@ struct SettingsView: View {
                 Spacer()
                 Text("Einstellungen").font(.headline)
                 Spacer().frame(width: 60)
+            }
+
+            GroupBox("Transkription") {
+                VStack(alignment: .leading, spacing: 8) {
+                    Picker("Backend", selection: $backend) {
+                        Text("OpenAI API").tag(TranscriptionBackend.api)
+                        Text("Lokal (whisper.cpp)").tag(TranscriptionBackend.local)
+                            .disabled(!localAvailable)
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: backend) { _, new in Preferences.backend = new }
+
+                    if backend == .local {
+                        Label(
+                            localAvailable ? "Modell: ggml-large-v3-turbo (~1,5 GB)"
+                                           : "Modell fehlt — ~/.handsfree/models/",
+                            systemImage: localAvailable ? "checkmark.circle.fill" : "exclamationmark.triangle.fill"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(localAvailable ? .green : .orange)
+                    }
+                }.padding(8)
             }
 
             GroupBox("API-Keys (Keychain)") {

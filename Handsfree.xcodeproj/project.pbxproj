@@ -11,6 +11,8 @@
 		162E37BD47CAF6F29302F9B2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4F5FED2CDCBCF9132A8061 /* SettingsView.swift */; };
 		27F34F50C0CAB84A7270C5F0 /* GlobalHotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3A3B7A0CBC7FF49B4C25B3 /* GlobalHotkeyManager.swift */; };
 		3211E374A77AAAF4C797332B /* LLMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3391ABAC286B39A9F4AFDD11 /* LLMClient.swift */; };
+		45723C0678463ABFA7D49447 /* LocalWhisperClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC78F137E2545852FB37A61 /* LocalWhisperClient.swift */; };
+		47789A19B21A24C614D27312 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6C588485F7435B3D22C4D4 /* Preferences.swift */; };
 		736FF7F6EB38A5AF60BA4092 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF0934F103DAC238FA0EF09 /* AudioRecorder.swift */; };
 		76217616249F291DEF8B6616 /* Mode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC4E3347676D8E4BAE5F67D /* Mode.swift */; };
 		7C5BC1EF9B628830B3C9F715 /* TextInjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF2BCE6F5CE1DF588BEBE8 /* TextInjector.swift */; };
@@ -33,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0CC78F137E2545852FB37A61 /* LocalWhisperClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWhisperClient.swift; sourceTree = "<group>"; };
 		167415E6786C7C980793EB78 /* Handsfree.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Handsfree.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1680B5ACB91D55732E6671CF /* HandsfreeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HandsfreeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E5B472565629AF13CFB13AC /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
@@ -44,6 +47,7 @@
 		68B710BC5FEC29D784621C24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6AC4E3347676D8E4BAE5F67D /* Mode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mode.swift; sourceTree = "<group>"; };
 		74FB2108AECCB4EA69DACC48 /* HandsfreeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandsfreeApp.swift; sourceTree = "<group>"; };
+		7B6C588485F7435B3D22C4D4 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		96F015F7A9ED0BADDAAE1454 /* Handsfree.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Handsfree.entitlements; sourceTree = "<group>"; };
 		A56FCE00C0646F592D589755 /* AppStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatus.swift; sourceTree = "<group>"; };
 		AA4F5FED2CDCBCF9132A8061 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -72,6 +76,7 @@
 		4A01C5EF42EBC7F05D0E69E1 /* Transcription */ = {
 			isa = PBXGroup;
 			children = (
+				0CC78F137E2545852FB37A61 /* LocalWhisperClient.swift */,
 				B3B6CCC53A574B88D0246E4D /* WhisperClient.swift */,
 			);
 			path = Transcription;
@@ -114,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				1E5B472565629AF13CFB13AC /* KeychainStore.swift */,
+				7B6C588485F7435B3D22C4D4 /* Preferences.swift */,
 				AA4F5FED2CDCBCF9132A8061 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -252,10 +258,12 @@
 				AFD52C59FBFB5375AE026D3F /* HandsfreeApp.swift in Sources */,
 				8697B9B8FC2A437ED53F52B3 /* KeychainStore.swift in Sources */,
 				3211E374A77AAAF4C797332B /* LLMClient.swift in Sources */,
+				45723C0678463ABFA7D49447 /* LocalWhisperClient.swift in Sources */,
 				967C1A2B437727FBC1969802 /* MenuBarController.swift in Sources */,
 				117A95DB3526EBFF9E2EA0CB /* MenuBarView.swift in Sources */,
 				76217616249F291DEF8B6616 /* Mode.swift in Sources */,
 				ED726AB239075AEA15C8C621 /* Orchestrator.swift in Sources */,
+				47789A19B21A24C614D27312 /* Preferences.swift in Sources */,
 				162E37BD47CAF6F29302F9B2 /* SettingsView.swift in Sources */,
 				7C5BC1EF9B628830B3C9F715 /* TextInjector.swift in Sources */,
 				E065DC15450555FEB342174B /* WhisperClient.swift in Sources */,

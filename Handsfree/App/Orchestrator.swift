@@ -16,9 +16,15 @@ final class Orchestrator {
     func startup() {
         Task {
             await requestMicrophonePermission()
-            let ready = KeychainStore.get("openai_api_key") != nil
-            status.state = ready ? .ready : .notReady
+            status.state = isReady() ? .ready : .notReady
             startHotkeys()
+        }
+    }
+
+    private func isReady() -> Bool {
+        switch Preferences.backend {
+        case .api:   return KeychainStore.get("openai_api_key") != nil
+        case .local: return LocalWhisperClient.detect() != nil
         }
     }
 
@@ -50,17 +56,13 @@ final class Orchestrator {
         status.state = .transcribing
         defer { status.activeMode = nil }
 
-        guard let openai = KeychainStore.get("openai_api_key") else {
-            status.state = .error("Kein OpenAI API Key"); return
-        }
-
         do {
             let wav = try await recorder.stop()
             guard wav.count > 1024 else {
                 status.state = .ready; return  // empty recording, ignore
             }
 
-            let raw = try await WhisperClient(apiKey: openai).transcribe(wav: wav)
+            let raw = try await transcribe(wav: wav)
             let text: String
             if mode == .raw {
                 text = raw
@@ -76,6 +78,21 @@ final class Orchestrator {
         } catch {
             log.error("pipeline: \(String(describing: error))")
             status.state = .error(String(describing: error).prefix(60).description)
+        }
+    }
+
+    private func transcribe(wav: Data) async throws -> String {
+        switch Preferences.backend {
+        case .local:
+            guard let local = LocalWhisperClient.detect() else {
+                throw HandsfreeError.transcription("Local model nicht gefunden (~/.handsfree/models/ggml-large-v3-turbo.bin)")
+            }
+            return try await local.transcribe(wav: wav)
+        case .api:
+            guard let openai = KeychainStore.get("openai_api_key") else {
+                throw HandsfreeError.missingAPIKey
+            }
+            return try await WhisperClient(apiKey: openai).transcribe(wav: wav)
         }
     }
 
