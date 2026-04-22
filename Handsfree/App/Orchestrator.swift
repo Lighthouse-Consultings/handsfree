@@ -16,9 +16,24 @@ final class Orchestrator {
     func startup() {
         Task {
             await requestMicrophonePermission()
-            status.state = isReady() ? .ready : .notReady
+            refreshReadiness()
             startHotkeys()
+            NotificationCenter.default.addObserver(
+                forName: Preferences.didChangeNotification,
+                object: nil, queue: .main
+            ) { [weak self] _ in
+                Task { @MainActor in self?.refreshReadiness() }
+            }
         }
+    }
+
+    func refreshReadiness() {
+        // Don't stomp on an in-progress recording/transcribing state.
+        switch status.state {
+        case .recording, .transcribing: return
+        default: break
+        }
+        status.state = isReady() ? .ready : .notReady
     }
 
     private func isReady() -> Bool {

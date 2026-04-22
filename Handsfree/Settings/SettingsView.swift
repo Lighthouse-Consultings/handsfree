@@ -50,6 +50,7 @@ struct SettingsView: View {
                         Button("Speichern") {
                             if !openai.isEmpty { KeychainStore.set(openai, for: "openai_api_key") }
                             if !anthropic.isEmpty { KeychainStore.set(anthropic, for: "anthropic_api_key") }
+                            Preferences.notifyChanged()
                             saved = true
                         }
                         .keyboardShortcut(.defaultAction)
