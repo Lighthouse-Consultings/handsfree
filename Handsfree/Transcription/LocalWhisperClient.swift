@@ -9,9 +9,17 @@ struct LocalWhisperClient {
     static func detect() -> LocalWhisperClient? {
         let model = ("~/.handsfree/models/ggml-large-v3-turbo.bin" as NSString).expandingTildeInPath
         guard FileManager.default.fileExists(atPath: model) else { return nil }
-        for candidate in ["/opt/homebrew/bin/whisper-cli", "/usr/local/bin/whisper-cli"] {
-            if FileManager.default.isExecutableFile(atPath: candidate) {
-                return LocalWhisperClient(binaryPath: candidate, modelPath: model)
+        let candidates = [
+            "/opt/homebrew/bin/whisper-cli",
+            "/opt/homebrew/opt/whisper-cpp/bin/whisper-cli",
+            "/usr/local/bin/whisper-cli",
+            "/usr/local/opt/whisper-cpp/bin/whisper-cli"
+        ]
+        for path in candidates {
+            // Resolve symlinks + check real file exists (isExecutableFile is flaky on symlinks).
+            let resolved = (path as NSString).resolvingSymlinksInPath
+            if FileManager.default.fileExists(atPath: resolved) {
+                return LocalWhisperClient(binaryPath: resolved, modelPath: model)
             }
         }
         return nil
