@@ -23,6 +23,7 @@
 		AFD52C59FBFB5375AE026D3F /* HandsfreeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74FB2108AECCB4EA69DACC48 /* HandsfreeApp.swift */; };
 		E065DC15450555FEB342174B /* WhisperClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B6CCC53A574B88D0246E4D /* WhisperClient.swift */; };
 		ED726AB239075AEA15C8C621 /* Orchestrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B169F4B042C3148CA8881A99 /* Orchestrator.swift */; };
+		FF16D234B21B20C565D4BB4D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C34C255D7C865D5569F07FFB /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		B169F4B042C3148CA8881A99 /* Orchestrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orchestrator.swift; sourceTree = "<group>"; };
 		B3B6CCC53A574B88D0246E4D /* WhisperClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperClient.swift; sourceTree = "<group>"; };
 		BFF0934F103DAC238FA0EF09 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		C34C255D7C865D5569F07FFB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -99,6 +101,14 @@
 				1EDF2BCE6F5CE1DF588BEBE8 /* TextInjector.swift */,
 			);
 			path = Injection;
+			sourceTree = "<group>";
+		};
+		978F0E154B61E12C24106555 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C34C255D7C865D5569F07FFB /* Assets.xcassets */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		A2F7E36C0D954D7A3554722E = {
@@ -150,6 +160,7 @@
 				8D811FD3C1A25BB54CF9C579 /* Injection */,
 				3EBE38F1FAC1AF64A44CE59F /* Models */,
 				CB3425B58350FA5029F1B962 /* Postprocess */,
+				978F0E154B61E12C24106555 /* Resources */,
 				A79B2218A7F4942088B921A1 /* Settings */,
 				4A01C5EF42EBC7F05D0E69E1 /* Transcription */,
 			);
@@ -199,6 +210,7 @@
 			buildConfigurationList = AB5B968198595823A6FA4C80 /* Build configuration list for PBXNativeTarget "Handsfree" */;
 			buildPhases = (
 				80FC14BBDBB919F9CBE08B13 /* Sources */,
+				99AD4D84504367ED0A545DD0 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -249,6 +261,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		99AD4D84504367ED0A545DD0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF16D234B21B20C565D4BB4D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		80FC14BBDBB919F9CBE08B13 /* Sources */ = {

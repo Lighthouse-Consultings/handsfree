@@ -41,6 +41,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.lighthouseconsultings.handsfree
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: Handsfree/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
 
   HandsfreeTests:
     type: bundle.unit-test
