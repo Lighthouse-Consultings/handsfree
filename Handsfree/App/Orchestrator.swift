@@ -28,18 +28,33 @@ final class Orchestrator {
     }
 
     func refreshReadiness() {
-        // Don't stomp on an in-progress recording/transcribing state.
         switch status.state {
         case .recording, .transcribing: return
         default: break
         }
-        status.state = isReady() ? .ready : .notReady
+        switch readinessCheck() {
+        case .ok: status.state = .ready
+        case .missing(let why):
+            log.info("readiness: \(why, privacy: .public)")
+            status.state = .notReady(why)
+        }
     }
 
-    private func isReady() -> Bool {
+    private enum Readiness { case ok, missing(String) }
+
+    private func readinessCheck() -> Readiness {
         switch Preferences.backend {
-        case .api:   return KeychainStore.get("openai_api_key") != nil
-        case .local: return LocalWhisperClient.detect() != nil
+        case .api:
+            return KeychainStore.get("openai_api_key") == nil ? .missing("OpenAI API Key fehlt") : .ok
+        case .local:
+            let modelPath = ("~/.handsfree/models/ggml-large-v3-turbo.bin" as NSString).expandingTildeInPath
+            if !FileManager.default.fileExists(atPath: modelPath) {
+                return .missing("Modell fehlt: \(modelPath)")
+            }
+            if LocalWhisperClient.detect() == nil {
+                return .missing("whisper-cli nicht gefunden in /opt/homebrew/bin")
+            }
+            return .ok
         }
     }
 
