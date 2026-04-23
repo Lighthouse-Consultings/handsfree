@@ -197,9 +197,9 @@ struct SettingsView: View {
             Spacer()
         }
         .padding(12)
-        .frame(width: 320)
+        .frame(width: 380)
         }
-        .frame(maxHeight: 520)
+        .frame(maxHeight: 720)
     }
 
     private var appVersion: String {

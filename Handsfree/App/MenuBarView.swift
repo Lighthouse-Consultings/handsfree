@@ -25,7 +25,7 @@ struct MenuBarView: View {
             footer
         }
         .padding(.vertical, 8)
-        .frame(width: 320)
+        .frame(width: 380)
     }
 
     private var header: some View {

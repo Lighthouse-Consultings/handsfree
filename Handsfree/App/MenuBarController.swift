@@ -12,7 +12,7 @@ final class MenuBarController {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         popover = NSPopover()
         popover.behavior = .transient
-        popover.contentSize = NSSize(width: 320, height: 420)
+        popover.contentSize = NSSize(width: 380, height: 720)
         popover.contentViewController = NSHostingController(
             rootView: MenuBarView().environmentObject(appStatus)
         )
