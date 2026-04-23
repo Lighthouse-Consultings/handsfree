@@ -39,6 +39,17 @@ struct SettingsView: View {
                         )
                         .font(.caption)
                         .foregroundStyle(localAvailable ? .green : .orange)
+
+                        if !localAvailable {
+                            Button("Setup-Befehl kopieren") {
+                                let cmd = "curl -fsSL https://raw.githubusercontent.com/Lighthouse-Consultings/handsfree/main/setup-local.sh | bash"
+                                NSPasteboard.general.clearContents()
+                                NSPasteboard.general.setString(cmd, forType: .string)
+                            }
+                            .font(.caption)
+                            Text("→ in Terminal einfügen, Enter drücken. Installiert whisper-cpp, ollama und alle Modelle.")
+                                .font(.caption2).foregroundStyle(.secondary)
+                        }
                     }
                 }.padding(8)
             }
