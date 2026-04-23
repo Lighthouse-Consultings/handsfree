@@ -122,7 +122,7 @@ final class Orchestrator {
         } catch {
             SoundFX.play(.failure)
             log.error("pipeline: \(String(describing: error), privacy: .public)")
-            status.state = .error(String(describing: error).prefix(60).description)
+            status.state = .error(String(describing: error).prefix(500).description)
         }
     }
 

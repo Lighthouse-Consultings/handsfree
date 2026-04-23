@@ -17,6 +17,9 @@ struct MenuBarView: View {
     private var main: some View {
         VStack(alignment: .leading, spacing: 0) {
             header
+            if showFullError {
+                errorBanner
+            }
             Divider()
             ForEach(Mode.allCases, id: \.self) { mode in
                 ModeRow(mode: mode, isActive: status.activeMode == mode)
@@ -28,6 +31,12 @@ struct MenuBarView: View {
         .frame(width: 380)
     }
 
+    private var showFullError: Bool {
+        if case .error = status.state { return true }
+        if case .notReady = status.state { return true }
+        return false
+    }
+
     private var header: some View {
         HStack(spacing: 8) {
             Image(systemName: "mic.fill")
@@ -36,10 +45,37 @@ struct MenuBarView: View {
             Text("Handsfree").font(.headline)
             Spacer()
             Circle().fill(status.statusColor).frame(width: 8, height: 8)
-            Text(status.statusText).font(.caption).foregroundStyle(.secondary)
+            Text(status.shortStatusText)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .truncationMode(.tail)
         }
         .padding(.horizontal, 12)
         .padding(.bottom, 8)
+    }
+
+    private var errorBanner: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(status.statusText)
+                    .font(.caption.monospaced())
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .textSelection(.enabled)
+                Button("Fehler kopieren") {
+                    NSPasteboard.general.clearContents()
+                    NSPasteboard.general.setString(status.statusText, forType: .string)
+                }
+                .font(.caption)
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(Color.orange.opacity(0.10))
     }
 
     private var footer: some View {

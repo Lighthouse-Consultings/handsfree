@@ -71,7 +71,7 @@ struct LocalWhisperClient {
 
         guard process.terminationStatus == 0 else {
             let err = String(data: errPipe.fileHandleForReading.availableData, encoding: .utf8) ?? "exit \(process.terminationStatus)"
-            throw HandsfreeError.transcription("whisper-cli: \(err.prefix(200))")
+            throw HandsfreeError.transcription("whisper-cli: \(err.prefix(800))")
         }
 
         let txtURL = URL(fileURLWithPath: tmp.path + ".txt")
