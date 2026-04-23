@@ -49,17 +49,6 @@ struct LocalWhisperClient {
             "-otxt",            // write <tmp>.txt
             "-of", tmp.path     // output file prefix
         ]
-        // If we're running the bundled whisper-cli, tell ggml where our backend
-        // .so files live. Absence of this var causes ggml to look in the build
-        // machine's /opt/homebrew path which doesn't exist on the user's Mac.
-        let binaryURL = URL(fileURLWithPath: binaryPath)
-        if binaryURL.path.contains(".app/Contents/Resources/") {
-            let backendsDir = binaryURL.deletingLastPathComponent()
-                .appendingPathComponent("ggml-backends").path
-            var env = ProcessInfo.processInfo.environment
-            env["GGML_BACKEND_PATH"] = backendsDir
-            process.environment = env
-        }
 
         let errPipe = Pipe()
         let outPipe = Pipe()
