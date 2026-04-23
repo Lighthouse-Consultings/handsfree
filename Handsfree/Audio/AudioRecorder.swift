@@ -37,23 +37,26 @@ actor AudioRecorder {
 
         input.installTap(onBus: 0, bufferSize: 4096, format: inFormat) { [weak self] inBuffer, _ in
             // Convert + copy synchronously; tap buffers get recycled by AVAudioEngine.
+            // Use a FRESH converter per buffer — sharing one across calls corrupts
+            // its internal state after the first convert returns.
+            guard let conv = AVAudioConverter(from: inBuffer.format, to: outFormat) else { return }
+            _ = converter  // keep reference so ARC doesn't deallocate the setup one (harmless)
+
             let ratio = Self.sampleRate / inBuffer.format.sampleRate
-            let outCapacity = AVAudioFrameCount(Double(inBuffer.frameLength) * ratio + 32)
+            let outCapacity = AVAudioFrameCount(Double(inBuffer.frameLength) * ratio + 64)
             guard outCapacity > 0,
                   let outBuf = AVAudioPCMBuffer(pcmFormat: outFormat, frameCapacity: outCapacity)
             else { return }
 
             var err: NSError?
             var fed = false
-            let result = converter.convert(to: outBuf, error: &err) { _, status in
+            _ = conv.convert(to: outBuf, error: &err) { _, status in
                 if fed { status.pointee = .endOfStream; return nil }
                 fed = true
                 status.pointee = .haveData
                 return inBuffer
             }
-            guard result != .error, err == nil,
-                  let ptr = outBuf.int16ChannelData?.pointee
-            else { return }
+            guard err == nil, let ptr = outBuf.int16ChannelData?.pointee else { return }
             let frames = Int(outBuf.frameLength)
             guard frames > 0 else { return }
             let copy = Array(UnsafeBufferPointer(start: ptr, count: frames))

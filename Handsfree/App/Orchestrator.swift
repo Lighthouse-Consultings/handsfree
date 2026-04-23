@@ -97,8 +97,11 @@ final class Orchestrator {
 
         do {
             let wav = try await recorder.stop()
+            log.info("wav=\(wav.count) bytes")
+
             guard wav.count > 1024 else {
-                status.state = .ready; return  // empty recording, ignore
+                status.state = .error("Aufnahme leer (\(wav.count) B)")
+                return
             }
 
             let raw = try await transcribe(wav: wav)
@@ -117,7 +120,7 @@ final class Orchestrator {
             status.state = .ready
         } catch {
             SoundFX.play(.failure)
-            log.error("pipeline: \(String(describing: error))")
+            log.error("pipeline: \(String(describing: error), privacy: .public)")
             status.state = .error(String(describing: error).prefix(60).description)
         }
     }
