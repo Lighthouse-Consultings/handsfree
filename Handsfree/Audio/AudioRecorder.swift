@@ -3,14 +3,17 @@ import Foundation
 
 // 16kHz mono PCM recorder. Writes to in-memory buffer, emits WAV on stop.
 // Hard cap 60s (SECURITY.md #6).
+//
+// Critical implementation note: AVAudioEngine tap buffers are short-lived — the
+// same PCMBuffer is re-used across callbacks. Conversion MUST happen
+// synchronously inside the tap closure; we then pass a copied Int16 array
+// (Sendable) to the actor for accumulation.
 actor AudioRecorder {
     static let maxRecordingSeconds: Double = 60
     static let sampleRate: Double = 16_000
 
     private let engine = AVAudioEngine()
     private var pcmSamples: [Int16] = []
-    private var converter: AVAudioConverter?
-    private var targetFormat: AVAudioFormat?
     private(set) var isRecording = false
     private var stopTask: Task<Void, Never>?
 
@@ -28,11 +31,33 @@ actor AudioRecorder {
         ) else {
             throw HandsfreeError.transcription("cannot create target audio format")
         }
-        targetFormat = outFormat
-        converter = AVAudioConverter(from: inFormat, to: outFormat)
+        guard let converter = AVAudioConverter(from: inFormat, to: outFormat) else {
+            throw HandsfreeError.transcription("cannot create audio converter")
+        }
 
-        input.installTap(onBus: 0, bufferSize: 1024, format: inFormat) { [weak self] buf, _ in
-            Task { [weak self] in await self?.append(buf) }
+        input.installTap(onBus: 0, bufferSize: 4096, format: inFormat) { [weak self] inBuffer, _ in
+            // Convert + copy synchronously; tap buffers get recycled by AVAudioEngine.
+            let ratio = Self.sampleRate / inBuffer.format.sampleRate
+            let outCapacity = AVAudioFrameCount(Double(inBuffer.frameLength) * ratio + 32)
+            guard outCapacity > 0,
+                  let outBuf = AVAudioPCMBuffer(pcmFormat: outFormat, frameCapacity: outCapacity)
+            else { return }
+
+            var err: NSError?
+            var fed = false
+            let result = converter.convert(to: outBuf, error: &err) { _, status in
+                if fed { status.pointee = .endOfStream; return nil }
+                fed = true
+                status.pointee = .haveData
+                return inBuffer
+            }
+            guard result != .error, err == nil,
+                  let ptr = outBuf.int16ChannelData?.pointee
+            else { return }
+            let frames = Int(outBuf.frameLength)
+            guard frames > 0 else { return }
+            let copy = Array(UnsafeBufferPointer(start: ptr, count: frames))
+            Task { [weak self] in await self?.appendSamples(copy) }
         }
 
         engine.prepare()
@@ -52,6 +77,8 @@ actor AudioRecorder {
         engine.inputNode.removeTap(onBus: 0)
         engine.stop()
         isRecording = false
+        // Give any in-flight append tasks a moment to land.
+        try? await Task.sleep(for: .milliseconds(60))
         return wavEncoded()
     }
 
@@ -62,23 +89,8 @@ actor AudioRecorder {
         isRecording = false
     }
 
-    private func append(_ buffer: AVAudioPCMBuffer) {
-        guard let converter, let targetFormat else { return }
-        let ratio = targetFormat.sampleRate / buffer.format.sampleRate
-        let outCapacity = AVAudioFrameCount(Double(buffer.frameLength) * ratio + 1024)
-        guard let outBuf = AVAudioPCMBuffer(pcmFormat: targetFormat, frameCapacity: outCapacity) else { return }
-
-        var error: NSError?
-        var fed = false
-        converter.convert(to: outBuf, error: &error) { _, status in
-            if fed { status.pointee = .noDataNow; return nil }
-            fed = true
-            status.pointee = .haveData
-            return buffer
-        }
-        guard error == nil, let ptr = outBuf.int16ChannelData?.pointee else { return }
-        let count = Int(outBuf.frameLength)
-        pcmSamples.append(contentsOf: UnsafeBufferPointer(start: ptr, count: count))
+    private func appendSamples(_ samples: [Int16]) {
+        pcmSamples.append(contentsOf: samples)
     }
 
     private func wavEncoded() -> Data {
