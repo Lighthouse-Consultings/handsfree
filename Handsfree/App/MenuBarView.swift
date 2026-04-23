@@ -29,7 +29,10 @@ struct MenuBarView: View {
     }
 
     private var header: some View {
-        HStack {
+        HStack(spacing: 8) {
+            Image(systemName: "mic.fill")
+                .font(.title3)
+                .foregroundStyle(Color(red: 0xC5/255.0, green: 0xA5/255.0, blue: 0x72/255.0))
             Text("Handsfree").font(.headline)
             Spacer()
             Circle().fill(status.statusColor).frame(width: 8, height: 8)

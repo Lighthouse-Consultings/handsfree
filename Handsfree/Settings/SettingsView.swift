@@ -131,12 +131,30 @@ struct SettingsView: View {
 
                     Divider()
 
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Nico Röpnack").font(.body)
-                        Text("Lighthouse Consultings").font(.caption).foregroundStyle(.secondary)
-                        Link("addvalue@lighthouseconsultings.com",
-                             destination: URL(string: "mailto:addvalue@lighthouseconsultings.com")!)
-                            .font(.caption)
+                    HStack(alignment: .top, spacing: 10) {
+                        AsyncImage(url: URL(string: "https://cdn.bfldr.com/L672WKMM/as/7kmkgp596j4tt3m74wkbfsw/Bildschirmfoto_2024-01-15_um_194833?auto=webp&format=png")) { phase in
+                            switch phase {
+                            case .success(let img):
+                                img.resizable().scaledToFill()
+                                    .frame(width: 48, height: 48)
+                                    .clipShape(Circle())
+                                    .overlay(Circle().stroke(Color(red: 0xC5/255.0, green: 0xA5/255.0, blue: 0x72/255.0), lineWidth: 1))
+                            default:
+                                Image(systemName: "person.crop.circle")
+                                    .resizable().frame(width: 48, height: 48)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Nico Röpnack").font(.body)
+                            Text("Lighthouse Consultings").font(.caption).foregroundStyle(.secondary)
+                            Link("addvalue@lighthouseconsultings.com",
+                                 destination: URL(string: "mailto:addvalue@lighthouseconsultings.com")!)
+                                .font(.caption)
+                            Link("+49 177 3472334",
+                                 destination: URL(string: "tel:+491773472334")!)
+                                .font(.caption)
+                        }
                     }
 
                     HStack(spacing: 14) {
