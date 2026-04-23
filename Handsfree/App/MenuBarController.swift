@@ -12,10 +12,16 @@ final class MenuBarController {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         popover = NSPopover()
         popover.behavior = .transient
+        popover.animates = true
         popover.contentSize = NSSize(width: 380, height: 720)
-        popover.contentViewController = NSHostingController(
+        let host = NSHostingController(
             rootView: MenuBarView().environmentObject(appStatus)
         )
+        // Let the hosting view's intrinsic size drive the popover size —
+        // so switching between MenuBarView (short) and SettingsView (tall)
+        // resizes the popover live instead of sticking on the initial size.
+        host.sizingOptions = [.preferredContentSize]
+        popover.contentViewController = host
 
         if let button = statusItem.button {
             button.image = NSImage(systemSymbolName: "waveform", accessibilityDescription: "Handsfree")
