@@ -105,12 +105,61 @@ struct SettingsView: View {
                 }.padding(8)
             }
 
+            GroupBox("Über Handsfree") {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 12) {
+                        AsyncImage(url: URL(string: "https://cdn.bfldr.com/L672WKMM/as/kwkj9q4nwcrj2fht65973n5c/LhC_-_Logo_simple_-_white?auto=webp&format=png")) { phase in
+                            switch phase {
+                            case .success(let img):
+                                img.resizable().scaledToFit()
+                                    .frame(width: 72, height: 48)
+                                    .padding(6)
+                                    .background(Color(red: 0x0C/255.0, green: 0x2E/255.0, blue: 0x4E/255.0), in: RoundedRectangle(cornerRadius: 6))
+                            default:
+                                Text("LHC").font(.headline.bold()).foregroundStyle(.white)
+                                    .frame(width: 72, height: 48)
+                                    .background(Color(red: 0x0C/255.0, green: 0x2E/255.0, blue: 0x4E/255.0), in: RoundedRectangle(cornerRadius: 6))
+                            }
+                        }
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Handsfree \(appVersion)")
+                                .font(.headline)
+                            Text("Struktur. Klarheit. Wirkung.")
+                                .font(.caption).italic().foregroundStyle(.secondary)
+                        }
+                    }
+
+                    Divider()
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Nico Röpnack").font(.body)
+                        Text("Lighthouse Consultings").font(.caption).foregroundStyle(.secondary)
+                        Link("addvalue@lighthouseconsultings.com",
+                             destination: URL(string: "mailto:addvalue@lighthouseconsultings.com")!)
+                            .font(.caption)
+                    }
+
+                    HStack(spacing: 14) {
+                        Link("Website", destination: URL(string: "https://lighthouseconsultings.de")!)
+                        Link("GitHub", destination: URL(string: "https://github.com/nicoroepnack-star/handsfree")!)
+                    }.font(.caption)
+
+                    Text("© 2026 Lighthouse Consultings")
+                        .font(.caption2).foregroundStyle(.secondary)
+                }.padding(8)
+            }
+
             Spacer()
         }
         .padding(12)
         .frame(width: 320)
         }
         .frame(maxHeight: 520)
+    }
+
+    private var appVersion: String {
+        let v = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "–"
+        return "v\(v)"
     }
 
     private func permissionRow(_ title: String, hint: String) -> some View {

@@ -40,10 +40,19 @@ struct MenuBarView: View {
     }
 
     private var footer: some View {
-        HStack {
-            Button("Einstellungen") { showSettings = true }
-            Spacer()
-            Button("Beenden") { NSApp.terminate(nil) }
+        VStack(spacing: 4) {
+            HStack {
+                Button("Einstellungen") { showSettings = true }
+                Spacer()
+                Button("Beenden") { NSApp.terminate(nil) }
+            }
+            HStack {
+                Spacer()
+                Text("© 2026 LHC")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                Spacer()
+            }
         }
         .padding(.horizontal, 12)
         .padding(.top, 8)

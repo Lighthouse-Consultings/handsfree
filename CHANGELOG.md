@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.0 — 2026-04-23
+- **Universal Binary** (arm64 + x86_64) — runs natively on Apple Silicon and Intel Macs
+- **Über-Handsfree** section in Settings with LHC logo, contact info, website/GitHub links, version
+- Discrete `© 2026 LHC` line in menubar popover footer
+- Version bumped to 0.5.0, copyright entry in Info.plist
+
+
 ## v0.4.0 — 2026-04-22
 - **Style Guide field** in Settings: persistent instructions appended to every LLM call (Polished / Emoji / Compose, both Anthropic and Ollama paths)
 - **Start sound** `Purr` when recording begins. Success/failure silent by user preference

@@ -48,7 +48,7 @@ Toggle in Settings. Raw mode works without any LLM backend. API keys stored in m
 
 ## Install from source
 
-Requirements: macOS 14+, Xcode 16, Apple Silicon.
+Requirements: macOS 14+, Xcode 16. Universal Binary — runs natively on both **Apple Silicon (M-series)** and **Intel** Macs.
 
 ```bash
 git clone git@github.com:nicoroepnack-star/handsfree.git

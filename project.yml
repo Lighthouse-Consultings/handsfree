@@ -13,6 +13,8 @@ settings:
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Automatic
     ENABLE_HARDENED_RUNTIME: YES
+    ARCHS: "arm64 x86_64"
+    ONLY_ACTIVE_ARCH: NO
 
 targets:
   Handsfree:
@@ -28,8 +30,9 @@ targets:
         LSUIElement: true
         NSMicrophoneUsageDescription: "Handsfree uses the microphone to transcribe your speech into text."
         CFBundleName: Handsfree
-        CFBundleShortVersionString: "0.1.0"
+        CFBundleShortVersionString: "0.5.0"
         CFBundleVersion: "1"
+        NSHumanReadableCopyright: "© 2026 Lighthouse Consultings"
     entitlements:
       path: Handsfree/Handsfree.entitlements
       properties:
