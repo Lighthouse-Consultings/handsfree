@@ -1,14 +1,25 @@
 import Foundation
 
 // Offline transcription via whisper.cpp (`whisper-cli`). Shell-out, no network.
-// Model default: ~/.handsfree/models/ggml-large-v3-turbo.bin
+// Model lookup (first match wins):
+//   1. /Users/Shared/.handsfree/models/ggml-large-v3-turbo.bin   (shared across users)
+//   2. ~/.handsfree/models/ggml-large-v3-turbo.bin               (per-user fallback)
 struct LocalWhisperClient {
     let binaryPath: String
     let modelPath: String
 
+    static let modelFileName = "ggml-large-v3-turbo.bin"
+
+    static func modelSearchPaths() -> [String] {
+        [
+            "/Users/Shared/.handsfree/models/\(modelFileName)",
+            ("~/.handsfree/models/\(modelFileName)" as NSString).expandingTildeInPath
+        ]
+    }
+
     static func detect() -> LocalWhisperClient? {
-        let model = ("~/.handsfree/models/ggml-large-v3-turbo.bin" as NSString).expandingTildeInPath
-        guard FileManager.default.fileExists(atPath: model) else { return nil }
+        guard let model = modelSearchPaths().first(where: { FileManager.default.fileExists(atPath: $0) })
+        else { return nil }
 
         // 1. Prefer the bundled whisper-cli inside Handsfree.app (no brew needed)
         if let bundled = Bundle.main.url(forResource: "whisper-cli", withExtension: nil),

@@ -48,9 +48,9 @@ final class Orchestrator {
         case .api:
             return KeychainStore.get("openai_api_key") == nil ? .missing("OpenAI API Key fehlt") : .ok
         case .local:
-            let modelPath = ("~/.handsfree/models/ggml-large-v3-turbo.bin" as NSString).expandingTildeInPath
-            if !FileManager.default.fileExists(atPath: modelPath) {
-                return .missing("Modell fehlt: \(modelPath)")
+            let modelPaths = LocalWhisperClient.modelSearchPaths()
+            if !modelPaths.contains(where: { FileManager.default.fileExists(atPath: $0) }) {
+                return .missing("Modell fehlt (weder in /Users/Shared/.handsfree/models/ noch in ~/.handsfree/models/)")
             }
             if LocalWhisperClient.detect() == nil {
                 return .missing("whisper-cli nicht gefunden in /opt/homebrew/bin")
