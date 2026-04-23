@@ -41,13 +41,17 @@ struct SettingsView: View {
                         .foregroundStyle(localAvailable ? .green : .orange)
 
                         if !localAvailable {
-                            Button("Setup-Befehl kopieren") {
-                                let cmd = "curl -fsSL https://raw.githubusercontent.com/Lighthouse-Consultings/handsfree/main/setup-local.sh | bash"
+                            Button("Whisper-Setup kopieren (3 Befehle)") {
+                                let cmd = """
+                                brew install whisper-cpp
+                                mkdir -p ~/.handsfree/models
+                                curl -L -o ~/.handsfree/models/ggml-large-v3-turbo.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin
+                                """
                                 NSPasteboard.general.clearContents()
                                 NSPasteboard.general.setString(cmd, forType: .string)
                             }
                             .font(.caption)
-                            Text("→ in Terminal einfügen, Enter drücken. Installiert whisper-cpp, ollama und alle Modelle.")
+                            Text("→ in Terminal einfügen, Enter. Lädt 1,5 GB Modell lokal.")
                                 .font(.caption2).foregroundStyle(.secondary)
                         }
                     }
@@ -64,8 +68,20 @@ struct SettingsView: View {
                     .onChange(of: llmBackend) { _, new in Preferences.llmBackend = new }
 
                     if llmBackend == .ollama {
-                        Text("Modell: gemma4:latest via http://127.0.0.1:11434")
+                        Text("Modell: gemma via http://127.0.0.1:11434 (~5 GB Download)")
                             .font(.caption).foregroundStyle(.secondary)
+                        Button("Ollama-Setup kopieren (3 Befehle)") {
+                            let cmd = """
+                            brew install ollama
+                            brew services start ollama
+                            ollama pull gemma3
+                            """
+                            NSPasteboard.general.clearContents()
+                            NSPasteboard.general.setString(cmd, forType: .string)
+                        }
+                        .font(.caption)
+                        Text("→ in Terminal einfügen, Enter. Lädt 5 GB Modell lokal.")
+                            .font(.caption2).foregroundStyle(.secondary)
                     }
                 }.padding(8)
             }
