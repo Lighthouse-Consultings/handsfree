@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0882A145C25F9C79F362302D /* WhisperModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB59562890831C46A4E88B52 /* WhisperModelManager.swift */; };
 		0E81532E222BAA9E4CC3AB20 /* OllamaClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BEC1EAFA31F9D94BC9CA75 /* OllamaClient.swift */; };
 		117A95DB3526EBFF9E2EA0CB /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9B53112686F1667C108AC9 /* MenuBarView.swift */; };
 		162E37BD47CAF6F29302F9B2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4F5FED2CDCBCF9132A8061 /* SettingsView.swift */; };
@@ -18,6 +19,7 @@
 		76217616249F291DEF8B6616 /* Mode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC4E3347676D8E4BAE5F67D /* Mode.swift */; };
 		7C5BC1EF9B628830B3C9F715 /* TextInjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF2BCE6F5CE1DF588BEBE8 /* TextInjector.swift */; };
 		7DFCED9969C158333691FC00 /* SoundFX.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13ADB35AFDFCD9B97E886FC /* SoundFX.swift */; };
+		866EEFF2DED740421F198865 /* WhisperModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 208A65EF9D2D9ED69FD024C9 /* WhisperModel.swift */; };
 		8697B9B8FC2A437ED53F52B3 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B472565629AF13CFB13AC /* KeychainStore.swift */; };
 		922AA38B0F7572EF032BA41C /* AppStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56FCE00C0646F592D589755 /* AppStatus.swift */; };
 		967C1A2B437727FBC1969802 /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3DF71A237251DD23E09A52 /* MenuBarController.swift */; };
@@ -43,6 +45,7 @@
 		1680B5ACB91D55732E6671CF /* HandsfreeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HandsfreeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E5B472565629AF13CFB13AC /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		1EDF2BCE6F5CE1DF588BEBE8 /* TextInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInjector.swift; sourceTree = "<group>"; };
+		208A65EF9D2D9ED69FD024C9 /* WhisperModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperModel.swift; sourceTree = "<group>"; };
 		22BEC1EAFA31F9D94BC9CA75 /* OllamaClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OllamaClient.swift; sourceTree = "<group>"; };
 		2C3DF71A237251DD23E09A52 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
 		2F3A3B7A0CBC7FF49B4C25B3 /* GlobalHotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyManager.swift; sourceTree = "<group>"; };
@@ -55,6 +58,7 @@
 		96F015F7A9ED0BADDAAE1454 /* Handsfree.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Handsfree.entitlements; sourceTree = "<group>"; };
 		A56FCE00C0646F592D589755 /* AppStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatus.swift; sourceTree = "<group>"; };
 		AA4F5FED2CDCBCF9132A8061 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AB59562890831C46A4E88B52 /* WhisperModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperModelManager.swift; sourceTree = "<group>"; };
 		B169F4B042C3148CA8881A99 /* Orchestrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orchestrator.swift; sourceTree = "<group>"; };
 		B3B6CCC53A574B88D0246E4D /* WhisperClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperClient.swift; sourceTree = "<group>"; };
 		BFF0934F103DAC238FA0EF09 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
@@ -84,6 +88,8 @@
 			children = (
 				0CC78F137E2545852FB37A61 /* LocalWhisperClient.swift */,
 				B3B6CCC53A574B88D0246E4D /* WhisperClient.swift */,
+				208A65EF9D2D9ED69FD024C9 /* WhisperModel.swift */,
+				AB59562890831C46A4E88B52 /* WhisperModelManager.swift */,
 			);
 			path = Transcription;
 			sourceTree = "<group>";
@@ -298,6 +304,8 @@
 				7DFCED9969C158333691FC00 /* SoundFX.swift in Sources */,
 				7C5BC1EF9B628830B3C9F715 /* TextInjector.swift in Sources */,
 				E065DC15450555FEB342174B /* WhisperClient.swift in Sources */,
+				866EEFF2DED740421F198865 /* WhisperModel.swift in Sources */,
+				0882A145C25F9C79F362302D /* WhisperModelManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

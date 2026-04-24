@@ -7,7 +7,19 @@ enum Preferences {
     private static let backendKey = "handsfree.backend"
     private static let llmBackendKey = "handsfree.llmBackend"
     private static let styleGuideKey = "handsfree.styleGuide"
+    private static let whisperModelKey = "handsfree.whisperModel"
     static let didChangeNotification = Notification.Name("handsfree.preferences.didChange")
+
+    static var whisperModel: WhisperModel {
+        get {
+            let raw = UserDefaults.standard.string(forKey: whisperModelKey) ?? WhisperModel.default.rawValue
+            return WhisperModel(rawValue: raw) ?? .default
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: whisperModelKey)
+            NotificationCenter.default.post(name: didChangeNotification, object: nil)
+        }
+    }
 
     static var styleGuide: String {
         get { UserDefaults.standard.string(forKey: styleGuideKey) ?? "" }

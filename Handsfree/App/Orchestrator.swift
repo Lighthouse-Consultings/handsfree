@@ -48,9 +48,10 @@ final class Orchestrator {
         case .api:
             return KeychainStore.get("openai_api_key") == nil ? .missing("OpenAI API Key fehlt") : .ok
         case .local:
-            let modelPaths = LocalWhisperClient.modelSearchPaths()
+            let model = Preferences.whisperModel
+            let modelPaths = LocalWhisperClient.modelSearchPaths(for: model)
             if !modelPaths.contains(where: { FileManager.default.fileExists(atPath: $0) }) {
-                return .missing("Modell fehlt (weder in /Users/Shared/.handsfree/models/ noch in ~/.handsfree/models/)")
+                return .missing("Whisper-Modell \(model.displayName) (\(model.fileName)) fehlt — in Einstellungen herunterladen")
             }
             if LocalWhisperClient.detect() == nil {
                 return .missing("whisper-cli nicht gefunden in /opt/homebrew/bin")
@@ -189,7 +190,8 @@ final class Orchestrator {
         switch Preferences.backend {
         case .local:
             guard let local = LocalWhisperClient.detect() else {
-                throw HandsfreeError.transcription("Local model nicht gefunden (~/.handsfree/models/ggml-large-v3-turbo.bin)")
+                let m = Preferences.whisperModel
+                throw HandsfreeError.transcription("Modell \(m.displayName) (\(m.fileName)) nicht gefunden — in Einstellungen herunterladen")
             }
             return try await local.transcribe(wav: wav)
         case .api:

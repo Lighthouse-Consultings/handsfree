@@ -1,6 +1,6 @@
 # Handsfree — Project Instructions
 
-**Current version:** v0.7.1 (tagged 2026-04-23)
+**Current version:** v0.7.2 (tagged 2026-04-24)
 **Repo:** https://github.com/Lighthouse-Consultings/handsfree (PRIVATE)
 **Latest DMG:** https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Handsfree.dmg
 
@@ -72,16 +72,13 @@ Statically-linked whisper-cli lives in `vendor/whisper-cli-static` (2.6 MB, arm6
 1. `/Users/Shared/.handsfree/models/ggml-large-v3-turbo.bin` (multi-user shared, admin places once)
 2. `~/.handsfree/models/ggml-large-v3-turbo.bin` (per-user fallback)
 
-## Next planned work — Option C (Model Picker)
-User (Nico) confirmed for next session: dropdown in Settings for whisper model size (Turbo 1,5 GB / Small 466 MB / Tiny 75 MB). Performance on low-RAM Macs (Shuang M2 8GB) is too slow with Turbo.
-
-Implementation sketch:
-- New `Preferences.whisperModel` UserDefault (enum: `.turbo | .small | .tiny`)
-- `LocalWhisperClient.modelFileName` becomes dynamic based on preference
-- SettingsView: segmented picker + per-variant status ("vorhanden" / "fehlt") + Download button
-- Progress UI during 1,5 GB download (URLSession.downloadTask with delegate for bytes)
-- Download target: prefer `~/.handsfree/models/` (no admin needed); Shared is admin-only
-- HuggingFace URLs: `https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-{tiny,small,medium,large-v3-turbo}.bin`
+## Model Picker (v0.7.2+)
+- `WhisperModel` enum (Turbo 1,5 GB / Small 466 MB / Tiny 75 MB) in `Transcription/WhisperModel.swift`
+- `Preferences.whisperModel` persists user choice
+- `WhisperModelManager` (singleton, `@MainActor`) manages URLSession downloads + delete + progress
+- Download target: `~/.handsfree/models/` (no admin needed). Shared admin path still respected for lookup.
+- Settings UI: segmented picker + per-variant row (status / Laden / Abbrechen / Löschen)
+- HuggingFace: `https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-{tiny,small,large-v3-turbo}.bin`
 
 ## UI spec (current, as of v0.7.1)
 Menubar popover, 380pt wide, auto-resizes for Settings (up to ~720pt):

@@ -8,12 +8,12 @@ struct LocalWhisperClient {
     let binaryPath: String
     let modelPath: String
 
-    static let modelFileName = "ggml-large-v3-turbo.bin"
+    static var modelFileName: String { Preferences.whisperModel.fileName }
 
-    static func modelSearchPaths() -> [String] {
+    static func modelSearchPaths(for model: WhisperModel = Preferences.whisperModel) -> [String] {
         [
-            "/Users/Shared/.handsfree/models/\(modelFileName)",
-            ("~/.handsfree/models/\(modelFileName)" as NSString).expandingTildeInPath
+            "/Users/Shared/.handsfree/models/\(model.fileName)",
+            ("~/.handsfree/models/\(model.fileName)" as NSString).expandingTildeInPath
         ]
     }
 

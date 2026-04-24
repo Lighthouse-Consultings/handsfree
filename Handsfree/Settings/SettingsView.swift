@@ -7,8 +7,13 @@ struct SettingsView: View {
     @State private var backend: TranscriptionBackend = Preferences.backend
     @State private var llmBackend: LLMBackend = Preferences.llmBackend
     @State private var styleGuide: String = Preferences.styleGuide
-    @State private var localAvailable: Bool = LocalWhisperClient.detect() != nil
+    @State private var selectedWhisperModel: WhisperModel = Preferences.whisperModel
+    @ObservedObject private var modelManager = WhisperModelManager.shared
     let onBack: () -> Void
+
+    private var localAvailable: Bool {
+        modelManager.isInstalled(selectedWhisperModel) && LocalWhisperClient.detect() != nil
+    }
 
     var body: some View {
         ScrollView {
@@ -22,38 +27,16 @@ struct SettingsView: View {
             }
 
             GroupBox("Transkription") {
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 10) {
                     Picker("Backend", selection: $backend) {
                         Text("OpenAI API").tag(TranscriptionBackend.api)
                         Text("Lokal (whisper.cpp)").tag(TranscriptionBackend.local)
-                            .disabled(!localAvailable)
                     }
                     .pickerStyle(.segmented)
                     .onChange(of: backend) { _, new in Preferences.backend = new }
 
                     if backend == .local {
-                        Label(
-                            localAvailable ? "Modell: ggml-large-v3-turbo (~1,5 GB)"
-                                           : "Modell fehlt — ~/.handsfree/models/",
-                            systemImage: localAvailable ? "checkmark.circle.fill" : "exclamationmark.triangle.fill"
-                        )
-                        .font(.caption)
-                        .foregroundStyle(localAvailable ? .green : .orange)
-
-                        if !localAvailable {
-                            Button("Whisper-Setup kopieren (3 Befehle)") {
-                                let cmd = """
-                                brew install whisper-cpp
-                                mkdir -p ~/.handsfree/models
-                                curl -L -o ~/.handsfree/models/ggml-large-v3-turbo.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin
-                                """
-                                NSPasteboard.general.clearContents()
-                                NSPasteboard.general.setString(cmd, forType: .string)
-                            }
-                            .font(.caption)
-                            Text("→ in Terminal einfügen, Enter. Lädt 1,5 GB Modell lokal.")
-                                .font(.caption2).foregroundStyle(.secondary)
-                        }
+                        whisperModelSection
                     }
                 }.padding(8)
             }
@@ -215,5 +198,85 @@ struct SettingsView: View {
                 Text(hint).font(.caption).foregroundStyle(.secondary)
             }
         }
+    }
+
+    // MARK: - Whisper model picker
+
+    private var whisperModelSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Picker("Modell", selection: $selectedWhisperModel) {
+                ForEach(WhisperModel.allCases) { m in
+                    Text("\(m.displayName) (\(m.sizeLabel))").tag(m)
+                }
+            }
+            .pickerStyle(.segmented)
+            .onChange(of: selectedWhisperModel) { _, new in Preferences.whisperModel = new }
+
+            Text(selectedWhisperModel.subtitle)
+                .font(.caption2).foregroundStyle(.secondary)
+
+            ForEach(WhisperModel.allCases) { model in
+                whisperModelRow(model)
+            }
+
+            if let err = modelManager.lastError {
+                Text(err).font(.caption2).foregroundStyle(.orange)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func whisperModelRow(_ model: WhisperModel) -> some View {
+        let installed = modelManager.isInstalled(model)
+        let progress = modelManager.progress(for: model)
+        let isSelected = model == selectedWhisperModel
+
+        HStack(spacing: 10) {
+            Image(systemName: installed ? "checkmark.circle.fill"
+                                        : (progress != nil ? "arrow.down.circle" : "circle.dashed"))
+                .foregroundStyle(installed ? .green : (progress != nil ? .blue : .secondary))
+
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 6) {
+                    Text(model.displayName).font(.body.weight(isSelected ? .semibold : .regular))
+                    Text(model.sizeLabel).font(.caption).foregroundStyle(.secondary)
+                    if isSelected {
+                        Text("ausgewählt").font(.caption2).padding(.horizontal, 5).padding(.vertical, 1)
+                            .background(Color.accentColor.opacity(0.15), in: Capsule())
+                    }
+                }
+                if let p = progress {
+                    ProgressView(value: p).progressViewStyle(.linear)
+                    Text(downloadStatusText(for: model))
+                        .font(.caption2).foregroundStyle(.secondary)
+                } else if installed {
+                    Text("vorhanden").font(.caption2).foregroundStyle(.green)
+                } else {
+                    Text("nicht installiert").font(.caption2).foregroundStyle(.secondary)
+                }
+            }
+
+            Spacer()
+
+            if progress != nil {
+                Button("Abbrechen") { modelManager.cancelDownload(model) }
+                    .buttonStyle(.bordered).controlSize(.small)
+            } else if installed {
+                Button("Löschen") { modelManager.delete(model) }
+                    .buttonStyle(.bordered).controlSize(.small)
+            } else {
+                Button("Laden") { modelManager.startDownload(model) }
+                    .buttonStyle(.borderedProminent).controlSize(.small)
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    private func downloadStatusText(for model: WhisperModel) -> String {
+        guard let state = modelManager.downloads[model] else { return "" }
+        let mb = Double(state.receivedBytes) / 1_000_000
+        let totalMB = Double(state.totalBytes) / 1_000_000
+        let pct = Int((state.progress * 100).rounded())
+        return String(format: "%.0f / %.0f MB (%d %%)", mb, totalMB, pct)
     }
 }

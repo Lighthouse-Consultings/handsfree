@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.7.2 — 2026-04-24
+- **Model Picker in Settings** — segmented picker für Turbo (1,5 GB) / Small (466 MB) / Tiny (75 MB), kein Terminal mehr nötig
+- **Eingebauter Downloader** mit Progress-Bar, Cancel und Löschen pro Modell-Variante — Download landet in ~/.handsfree/models/
+- `LocalWhisperClient.modelFileName` / `modelSearchPaths()` jetzt dynamisch (folgen `Preferences.whisperModel`)
+- Fehlermeldungen im Orchestrator zeigen den gewählten Modellnamen statt hartkodiertem Turbo-Pfad
+- Rationale: schwache Macs (M2 8GB) sind mit Turbo zu langsam, Tiny/Small als Low-RAM-Option ohne brew/curl
+
 ## v0.5.0 — 2026-04-23
 - **Universal Binary** (arm64 + x86_64) — runs natively on Apple Silicon and Intel Macs
 - **Über-Handsfree** section in Settings with LHC logo, contact info, website/GitHub links, version
