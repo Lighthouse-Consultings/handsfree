@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.7.3 — 2026-04-25 — Pre-Public Cleanup
+- **Privacy:** Diktat-Inhalte landen nicht mehr im macOS Unified Log (zuvor wurde der Anfang jedes Transkripts auf `.error`-Level mit `privacy: .public` geloggt — andere Prozesse mit Log-Zugriff hätten sie lesen können)
+- **Privacy:** `X-Handsfree-Model`-Header beim Modell-Download an HuggingFace entfernt (war redundant zur URL und ein unnötiges Identifikations-Signal)
+- **Sicherheit:** Compose-Mode hat jetzt einen SICHERHEIT-Block im System-Prompt, der Clipboard- und Voice-Inhalt explizit als unvertraute Daten kennzeichnet (Prompt-Injection-Schutz)
+- GitHub-Link im "Über"-Tab korrigiert auf `Lighthouse-Consultings/handsfree`
+- `.gitignore`: lokale Tooling-Artefakte (`.observer.lock`, `observer.log`) ausgeschlossen
+
 ## v0.7.2 — 2026-04-24
 - **Model Picker in Settings** — segmented picker für Turbo (1,5 GB) / Small (466 MB) / Tiny (75 MB), kein Terminal mehr nötig
 - **Eingebauter Downloader** mit Progress-Bar, Cancel und Löschen pro Modell-Variante — Download landet in ~/.handsfree/models/

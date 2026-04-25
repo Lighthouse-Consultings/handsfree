@@ -169,7 +169,7 @@ struct SettingsView: View {
 
                     HStack(spacing: 14) {
                         Link("Website", destination: URL(string: "https://lighthouseconsultings.de")!)
-                        Link("GitHub", destination: URL(string: "https://github.com/nicoroepnack-star/handsfree")!)
+                        Link("GitHub", destination: URL(string: "https://github.com/Lighthouse-Consultings/handsfree")!)
                     }.font(.caption)
 
                     Text("© 2026 Lighthouse Consultings")

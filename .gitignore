@@ -19,3 +19,7 @@ Package.resolved
 *.env
 .env.*
 secrets.json
+
+## Local tooling artifacts
+.observer.lock
+observer.log

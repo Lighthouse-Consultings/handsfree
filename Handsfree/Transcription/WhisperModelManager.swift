@@ -83,9 +83,7 @@ final class WhisperModelManager: NSObject, ObservableObject {
             return
         }
 
-        var request = URLRequest(url: model.downloadURL)
-        request.setValue(model.rawValue, forHTTPHeaderField: "X-Handsfree-Model")
-        let task = session.downloadTask(with: request)
+        let task = session.downloadTask(with: model.downloadURL)
         task.taskDescription = model.rawValue
         downloads[model] = DownloadState(task: task, progress: 0, receivedBytes: 0, totalBytes: model.approximateBytes)
         task.resume()
