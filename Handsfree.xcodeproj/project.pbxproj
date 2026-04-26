@@ -15,6 +15,7 @@
 		3211E374A77AAAF4C797332B /* LLMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3391ABAC286B39A9F4AFDD11 /* LLMClient.swift */; };
 		45723C0678463ABFA7D49447 /* LocalWhisperClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC78F137E2545852FB37A61 /* LocalWhisperClient.swift */; };
 		47789A19B21A24C614D27312 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6C588485F7435B3D22C4D4 /* Preferences.swift */; };
+		516FD4F4E47BA226A2475C93 /* UpdateChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC35B80D4A63169BA99AC305 /* UpdateChecker.swift */; };
 		736FF7F6EB38A5AF60BA4092 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF0934F103DAC238FA0EF09 /* AudioRecorder.swift */; };
 		76217616249F291DEF8B6616 /* Mode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC4E3347676D8E4BAE5F67D /* Mode.swift */; };
 		7C5BC1EF9B628830B3C9F715 /* TextInjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDF2BCE6F5CE1DF588BEBE8 /* TextInjector.swift */; };
@@ -64,6 +65,7 @@
 		BFF0934F103DAC238FA0EF09 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		C34C255D7C865D5569F07FFB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D13ADB35AFDFCD9B97E886FC /* SoundFX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundFX.swift; sourceTree = "<group>"; };
+		FC35B80D4A63169BA99AC305 /* UpdateChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateChecker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -154,6 +156,7 @@
 				5F9B53112686F1667C108AC9 /* MenuBarView.swift */,
 				B169F4B042C3148CA8881A99 /* Orchestrator.swift */,
 				D13ADB35AFDFCD9B97E886FC /* SoundFX.swift */,
+				FC35B80D4A63169BA99AC305 /* UpdateChecker.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -303,6 +306,7 @@
 				162E37BD47CAF6F29302F9B2 /* SettingsView.swift in Sources */,
 				7DFCED9969C158333691FC00 /* SoundFX.swift in Sources */,
 				7C5BC1EF9B628830B3C9F715 /* TextInjector.swift in Sources */,
+				516FD4F4E47BA226A2475C93 /* UpdateChecker.swift in Sources */,
 				E065DC15450555FEB342174B /* WhisperClient.swift in Sources */,
 				866EEFF2DED740421F198865 /* WhisperModel.swift in Sources */,
 				0882A145C25F9C79F362302D /* WhisperModelManager.swift in Sources */,

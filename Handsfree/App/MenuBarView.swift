@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MenuBarView: View {
     @EnvironmentObject var status: AppStatus
+    @ObservedObject private var updates = UpdateChecker.shared
     @State private var showSettings = false
 
     var body: some View {
@@ -20,6 +21,9 @@ struct MenuBarView: View {
             if showFullError {
                 errorBanner
             }
+            if updates.hasUpdate, let release = updates.latest {
+                updateBanner(release: release)
+            }
             Divider()
             ForEach(Mode.allCases, id: \.self) { mode in
                 ModeRow(mode: mode, isActive: status.activeMode == mode)
@@ -29,6 +33,25 @@ struct MenuBarView: View {
         }
         .padding(.vertical, 8)
         .frame(width: 380)
+    }
+
+    private func updateBanner(release: UpdateChecker.LatestRelease) -> some View {
+        HStack(alignment: .center, spacing: 8) {
+            Image(systemName: "arrow.down.circle.fill")
+                .foregroundStyle(Color(red: 0xC5/255.0, green: 0xA5/255.0, blue: 0x72/255.0))
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Update verfügbar: \(release.tagName)").font(.caption.weight(.semibold))
+                Text("Aktuell: v\(updates.currentVersion)").font(.caption2).foregroundStyle(.secondary)
+            }
+            Spacer()
+            Button("Notes") { NSWorkspace.shared.open(release.htmlURL) }
+                .font(.caption)
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(Color(red: 0xC5/255.0, green: 0xA5/255.0, blue: 0x72/255.0).opacity(0.12))
     }
 
     private var showFullError: Bool {

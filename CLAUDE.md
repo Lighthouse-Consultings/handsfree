@@ -1,6 +1,6 @@
 # Handsfree — Project Instructions
 
-**Current version:** v0.7.3 (tagged 2026-04-25)
+**Current version:** v0.8.0 (tagged 2026-04-26)
 **Repo:** https://github.com/Lighthouse-Consultings/handsfree (PRIVATE)
 **Latest DMG:** https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Handsfree.dmg
 

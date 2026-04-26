@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.8.0 — 2026-04-26 — Update-Check & Re-Engagement-Funnel
+- **UpdateChecker** (neu): pollt 1x/Tag den öffentlichen GitHub-Releases-Endpoint, erkennt neue Versionen via Semver-Vergleich. Ephemeral URLSession (keine Cookies, kein geteilter Cache), nur User-Agent + Accept-Header — keine Identifikation.
+- **Update-Banner** im Menü-Bar-Popover: gold-akzentuiert, zeigt neue Version, "Notes"-Button öffnet GitHub-Release-Seite im Browser
+- **Updates-Sektion in Settings:** Toggle für automatische Checks (Default: an), "Jetzt prüfen"-Button für manuelle Aktualisierung, Status-Anzeige (aktuell / Update verfügbar)
+- **"Updates per Mail"-Link** in Settings → Über → führt zu `lighthouseconsultings.de/handsfree` (Newsletter-Form, Pull-basiert)
+- Privacy bleibt: kein Tracking, kein Heartbeat, keine User-IDs. Nur ein wöchentlicher GitHub-API-Call ohne Auth-Header.
+
 ## v0.7.3 — 2026-04-25 — Pre-Public Cleanup
 - **Privacy:** Diktat-Inhalte landen nicht mehr im macOS Unified Log (zuvor wurde der Anfang jedes Transkripts auf `.error`-Level mit `privacy: .public` geloggt — andere Prozesse mit Log-Zugriff hätten sie lesen können)
 - **Privacy:** `X-Handsfree-Model`-Header beim Modell-Download an HuggingFace entfernt (war redundant zur URL und ein unnötiges Identifikations-Signal)
@@ -13,6 +20,33 @@
 - `LocalWhisperClient.modelFileName` / `modelSearchPaths()` jetzt dynamisch (folgen `Preferences.whisperModel`)
 - Fehlermeldungen im Orchestrator zeigen den gewählten Modellnamen statt hartkodiertem Turbo-Pfad
 - Rationale: schwache Macs (M2 8GB) sind mit Turbo zu langsam, Tiny/Small als Low-RAM-Option ohne brew/curl
+
+## v0.7.1 — 2026-04-23
+- Whisper-Modell wird jetzt zusätzlich unter `/Users/Shared/.handsfree/models/` gesucht — Admin kann es einmal zentral ablegen, alle User auf dem Mac nutzen es automatisch
+- Kein per-User-Symlink mehr nötig auf Multi-User-Macs
+
+## v0.7.0 — 2026-04-23
+- **whisper-cli statisch gelinkt** im App-Bundle — keine Homebrew-Abhängigkeit, keine externen ggml-Plugins, keine dylib-Probleme auf Ziel-Macs
+- Voraussetzung für Distribution per DMG: User braucht nur die App + ein Modell, sonst nichts
+- Apple Silicon only für Lokal-Whisper (Intel-Macs nutzen Cloud-Backend)
+
+## v0.6.1 — 2026-04-22
+- Fehlermeldungen werden vollständig angezeigt (vorher bei 60 Zeichen abgeschnitten)
+- "Fehler kopieren"-Button in der Error-Banner
+
+## v0.6.0 — 2026-04-22
+- **whisper-cli + Libraries gebündelt** in Handsfree.app — kein `brew install whisper-cpp` mehr nötig für Endnutzer
+- App-Größe steigt von 2 MB auf 8 MB, Modell bleibt separat in `~/.handsfree/models/`
+- Apple Silicon only (Intel-Macs brauchen weiter Brew oder Cloud-Backend)
+
+## v0.5.2 — 2026-04-22
+- Setup-Schritte für Whisper (1,5 GB) und Ollama/Gemma (5 GB) sauber getrennt — User installiert nur was er braucht
+- Install-Kommandos inline in `LIES_MICH.txt` und kopierbar aus den App-Settings
+
+## v0.5.1 — 2026-04-22
+- **Audio-Pipeline-Fix:** AVAudioEngine-Tap-Buffer werden synchron im Callback konvertiert — vorher sind Samples beim Engine-Recycling verloren gegangen, Whisper halluzinierte "you" auf Stille
+- Fresh `AVAudioConverter` pro Buffer (verhindert `.endOfStream`-State-Korruption)
+- Reliable `[Int16]`-Copy in den Actor
 
 ## v0.5.0 — 2026-04-23
 - **Universal Binary** (arm64 + x86_64) — runs natively on Apple Silicon and Intel Macs

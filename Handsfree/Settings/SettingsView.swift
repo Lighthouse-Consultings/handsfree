@@ -9,6 +9,8 @@ struct SettingsView: View {
     @State private var styleGuide: String = Preferences.styleGuide
     @State private var selectedWhisperModel: WhisperModel = Preferences.whisperModel
     @ObservedObject private var modelManager = WhisperModelManager.shared
+    @ObservedObject private var updates = UpdateChecker.shared
+    @State private var updateCheckEnabled: Bool = Preferences.updateCheckEnabled
     let onBack: () -> Void
 
     private var localAvailable: Bool {
@@ -115,6 +117,8 @@ struct SettingsView: View {
                 }.padding(8)
             }
 
+            updatesSection
+
             GroupBox("Über Handsfree") {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(spacing: 12) {
@@ -170,6 +174,7 @@ struct SettingsView: View {
                     HStack(spacing: 14) {
                         Link("Website", destination: URL(string: "https://lighthouseconsultings.de")!)
                         Link("GitHub", destination: URL(string: "https://github.com/Lighthouse-Consultings/handsfree")!)
+                        Link("Updates per Mail", destination: URL(string: "https://lighthouseconsultings.de/handsfree")!)
                     }.font(.caption)
 
                     Text("© 2026 Lighthouse Consultings")
@@ -278,5 +283,44 @@ struct SettingsView: View {
         let totalMB = Double(state.totalBytes) / 1_000_000
         let pct = Int((state.progress * 100).rounded())
         return String(format: "%.0f / %.0f MB (%d %%)", mb, totalMB, pct)
+    }
+
+    // MARK: - Updates section
+
+    private var updatesSection: some View {
+        GroupBox("Updates") {
+            VStack(alignment: .leading, spacing: 8) {
+                Toggle("Wöchentlich auf Updates prüfen", isOn: $updateCheckEnabled)
+                    .onChange(of: updateCheckEnabled) { _, new in Preferences.updateCheckEnabled = new }
+                Text("Pingt nur GitHub Releases (öffentlicher Endpoint, keine Identifikation, kein Telemetrie). Deaktiviert? → Du checkst Updates manuell.")
+                    .font(.caption2).foregroundStyle(.secondary)
+
+                HStack(spacing: 8) {
+                    if updates.checking {
+                        ProgressView().controlSize(.small)
+                        Text("Prüfe…").font(.caption).foregroundStyle(.secondary)
+                    } else if let release = updates.latest, updates.hasUpdate {
+                        Image(systemName: "arrow.down.circle.fill")
+                            .foregroundStyle(Color(red: 0xC5/255.0, green: 0xA5/255.0, blue: 0x72/255.0))
+                        Text("Neue Version: \(release.tagName)").font(.caption)
+                        Button("Notes") { NSWorkspace.shared.open(release.htmlURL) }
+                            .buttonStyle(.bordered).controlSize(.small)
+                    } else if updates.latest != nil {
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+                        Text("Aktuell: v\(updates.currentVersion)").font(.caption).foregroundStyle(.secondary)
+                    } else {
+                        Text("Aktuelle Version: v\(updates.currentVersion)").font(.caption).foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Button("Jetzt prüfen") {
+                        Task { await updates.check() }
+                    }.controlSize(.small)
+                }
+
+                if let err = updates.lastError {
+                    Text(err).font(.caption2).foregroundStyle(.orange)
+                }
+            }.padding(8)
+        }
     }
 }

@@ -20,5 +20,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let orch = Orchestrator(status: status)
         orchestrator = orch
         orch.startup()
+        Task { await UpdateChecker.shared.checkIfDue() }
     }
 }

@@ -8,7 +8,20 @@ enum Preferences {
     private static let llmBackendKey = "handsfree.llmBackend"
     private static let styleGuideKey = "handsfree.styleGuide"
     private static let whisperModelKey = "handsfree.whisperModel"
+    private static let updateCheckEnabledKey = "handsfree.updateCheckEnabled"
     static let didChangeNotification = Notification.Name("handsfree.preferences.didChange")
+
+    static var updateCheckEnabled: Bool {
+        get {
+            // Default true for fresh installs; user can opt out in Settings.
+            if UserDefaults.standard.object(forKey: updateCheckEnabledKey) == nil { return true }
+            return UserDefaults.standard.bool(forKey: updateCheckEnabledKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: updateCheckEnabledKey)
+            NotificationCenter.default.post(name: didChangeNotification, object: nil)
+        }
+    }
 
     static var whisperModel: WhisperModel {
         get {
