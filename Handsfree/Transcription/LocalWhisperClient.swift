@@ -43,7 +43,7 @@ struct LocalWhisperClient {
         return nil
     }
 
-    func transcribe(wav: Data, language: String = "auto") async throws -> String {
+    func transcribe(wav: Data, language: String = "de") async throws -> String {
         let tmp = FileManager.default.temporaryDirectory
             .appendingPathComponent("handsfree-\(UUID().uuidString).wav")
         try wav.write(to: tmp)
@@ -57,6 +57,7 @@ struct LocalWhisperClient {
             "-l", language,
             "-nt",              // no timestamps
             "--no-prints",      // suppress progress
+            "-sns",             // suppress non-speech tokens — blocks "you" / "[Music]" hallucinations on silence
             "-otxt",            // write <tmp>.txt
             "-of", tmp.path     // output file prefix
         ]

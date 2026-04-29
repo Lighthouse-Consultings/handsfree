@@ -220,6 +220,17 @@ struct SettingsView: View {
             Text(selectedWhisperModel.subtitle)
                 .font(.caption2).foregroundStyle(.secondary)
 
+            if selectedWhisperModel == .tiny || selectedWhisperModel == .small {
+                HStack(alignment: .top, spacing: 6) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.orange)
+                    Text("Tiny/Small halluzinieren bei Stille gelegentlich 'you' oder 'thanks for watching'. Für saubere deutsche Transkription Turbo empfohlen.")
+                        .font(.caption2)
+                        .foregroundStyle(.orange)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
             ForEach(WhisperModel.allCases) { model in
                 whisperModelRow(model)
             }

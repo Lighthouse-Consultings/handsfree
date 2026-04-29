@@ -30,7 +30,7 @@ targets:
         LSUIElement: true
         NSMicrophoneUsageDescription: "Handsfree uses the microphone to transcribe your speech into text."
         CFBundleName: Handsfree
-        CFBundleShortVersionString: "0.8.0"
+        CFBundleShortVersionString: "0.8.1"
         CFBundleVersion: "1"
         NSHumanReadableCopyright: "© 2026 Lighthouse Consultings"
     entitlements:

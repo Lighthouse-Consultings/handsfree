@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.8.1 — 2026-04-29 — "you"-Halluzination gehärtet
+- **Sprache fixiert auf Deutsch** statt Auto-Detect: `LocalWhisperClient` und `WhisperClient` verwenden jetzt `de` als Default. Bei kurzen oder leisen Aufnahmen wurde Englisch fehlerkannt, was die englischen Standard-Halluzinationen ("you", "thanks for watching") triggerte.
+- **`-sns` (suppress non-speech tokens)** an `whisper-cli` ergänzt: blockiert Stille-Halluzinationen direkt im Sampler.
+- **UI-Warnung in Settings** bei Tiny/Small: orange Hinweistext erklärt, dass kleine Modelle bei Stille `you` halluzinieren können und Turbo für deutsche Diktion empfohlen ist.
+- Hintergrund: Tiny/Small-Modelle waren über den Model-Picker (v0.7.2) wählbar, Nutzer mit Tiny-Auswahl bekamen konstant `you` als Output. Fix wirkt für alle Modelle, eliminiert Symptom auch ohne Modellwechsel.
+
 ## v0.8.0 — 2026-04-26 — Update-Check & Re-Engagement-Funnel
 - **UpdateChecker** (neu): pollt 1x/Tag den öffentlichen GitHub-Releases-Endpoint, erkennt neue Versionen via Semver-Vergleich. Ephemeral URLSession (keine Cookies, kein geteilter Cache), nur User-Agent + Accept-Header — keine Identifikation.
 - **Update-Banner** im Menü-Bar-Popover: gold-akzentuiert, zeigt neue Version, "Notes"-Button öffnet GitHub-Release-Seite im Browser
