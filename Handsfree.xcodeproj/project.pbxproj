@@ -24,6 +24,7 @@
 		8697B9B8FC2A437ED53F52B3 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B472565629AF13CFB13AC /* KeychainStore.swift */; };
 		922AA38B0F7572EF032BA41C /* AppStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56FCE00C0646F592D589755 /* AppStatus.swift */; };
 		967C1A2B437727FBC1969802 /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3DF71A237251DD23E09A52 /* MenuBarController.swift */; };
+		9CB599DB9F773BD314874135 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A10193C8D56B04F4370B367 /* Localization.swift */; };
 		AFD52C59FBFB5375AE026D3F /* HandsfreeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74FB2108AECCB4EA69DACC48 /* HandsfreeApp.swift */; };
 		E065DC15450555FEB342174B /* WhisperClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B6CCC53A574B88D0246E4D /* WhisperClient.swift */; };
 		ED726AB239075AEA15C8C621 /* Orchestrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B169F4B042C3148CA8881A99 /* Orchestrator.swift */; };
@@ -48,6 +49,7 @@
 		1EDF2BCE6F5CE1DF588BEBE8 /* TextInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInjector.swift; sourceTree = "<group>"; };
 		208A65EF9D2D9ED69FD024C9 /* WhisperModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperModel.swift; sourceTree = "<group>"; };
 		22BEC1EAFA31F9D94BC9CA75 /* OllamaClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OllamaClient.swift; sourceTree = "<group>"; };
+		2A10193C8D56B04F4370B367 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		2C3DF71A237251DD23E09A52 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
 		2F3A3B7A0CBC7FF49B4C25B3 /* GlobalHotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyManager.swift; sourceTree = "<group>"; };
 		3391ABAC286B39A9F4AFDD11 /* LLMClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMClient.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				1E5B472565629AF13CFB13AC /* KeychainStore.swift */,
+				2A10193C8D56B04F4370B367 /* Localization.swift */,
 				7B6C588485F7435B3D22C4D4 /* Preferences.swift */,
 				AA4F5FED2CDCBCF9132A8061 /* SettingsView.swift */,
 			);
@@ -297,6 +300,7 @@
 				8697B9B8FC2A437ED53F52B3 /* KeychainStore.swift in Sources */,
 				3211E374A77AAAF4C797332B /* LLMClient.swift in Sources */,
 				45723C0678463ABFA7D49447 /* LocalWhisperClient.swift in Sources */,
+				9CB599DB9F773BD314874135 /* Localization.swift in Sources */,
 				967C1A2B437727FBC1969802 /* MenuBarController.swift in Sources */,
 				117A95DB3526EBFF9E2EA0CB /* MenuBarView.swift in Sources */,
 				76217616249F291DEF8B6616 /* Mode.swift in Sources */,

@@ -15,7 +15,9 @@ final class MenuBarController {
         popover.animates = true
         popover.contentSize = NSSize(width: 380, height: 720)
         let host = NSHostingController(
-            rootView: MenuBarView().environmentObject(appStatus)
+            rootView: MenuBarView()
+                .environmentObject(appStatus)
+                .environmentObject(LocalizationManager.shared)
         )
         // Let the hosting view's intrinsic size drive the popover size —
         // so switching between MenuBarView (short) and SettingsView (tall)

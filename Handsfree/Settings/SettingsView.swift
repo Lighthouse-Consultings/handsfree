@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @State private var openai: String = KeychainStore.get("openai_api_key") ?? ""
     @State private var anthropic: String = KeychainStore.get("anthropic_api_key") ?? ""
     @State private var saved: Bool = false
@@ -8,6 +9,7 @@ struct SettingsView: View {
     @State private var llmBackend: LLMBackend = Preferences.llmBackend
     @State private var styleGuide: String = Preferences.styleGuide
     @State private var selectedWhisperModel: WhisperModel = Preferences.whisperModel
+    @State private var appLanguage: AppLanguage = Preferences.appLanguage
     @ObservedObject private var modelManager = WhisperModelManager.shared
     @ObservedObject private var updates = UpdateChecker.shared
     @State private var updateCheckEnabled: Bool = Preferences.updateCheckEnabled
@@ -21,18 +23,29 @@ struct SettingsView: View {
         ScrollView {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Button(action: onBack) { Image(systemName: "chevron.left"); Text("Zurück") }
+                Button(action: onBack) { Image(systemName: "chevron.left"); Text(t("Zurück", "Back")) }
                     .buttonStyle(.plain)
                 Spacer()
-                Text("Einstellungen").font(.headline)
+                Text(t("Einstellungen", "Settings")).font(.headline)
                 Spacer().frame(width: 60)
             }
 
-            GroupBox("Transkription") {
+            GroupBox(t("Sprache", "Language")) {
+                Picker(t("Sprache", "Language"), selection: $appLanguage) {
+                    ForEach(AppLanguage.allCases) { lang in
+                        Text(lang == .system ? t("System", "System") : lang.nativeName).tag(lang)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: appLanguage) { _, new in Preferences.appLanguage = new }
+                .padding(8)
+            }
+
+            GroupBox(t("Transkription", "Transcription")) {
                 VStack(alignment: .leading, spacing: 10) {
                     Picker("Backend", selection: $backend) {
                         Text("OpenAI API").tag(TranscriptionBackend.api)
-                        Text("Lokal (whisper.cpp)").tag(TranscriptionBackend.local)
+                        Text(t("Lokal (whisper.cpp)", "Local (whisper.cpp)")).tag(TranscriptionBackend.local)
                     }
                     .pickerStyle(.segmented)
                     .onChange(of: backend) { _, new in Preferences.backend = new }
@@ -43,19 +56,20 @@ struct SettingsView: View {
                 }.padding(8)
             }
 
-            GroupBox("LLM (für Polished / Emoji / Compose)") {
+            GroupBox(t("LLM (für Polished / Emoji / Compose)", "LLM (for Polished / Emoji / Compose)")) {
                 VStack(alignment: .leading, spacing: 8) {
                     Picker("LLM", selection: $llmBackend) {
                         Text("Anthropic API").tag(LLMBackend.anthropic)
-                        Text("Lokal (Ollama)").tag(LLMBackend.ollama)
+                        Text(t("Lokal (Ollama)", "Local (Ollama)")).tag(LLMBackend.ollama)
                     }
                     .pickerStyle(.segmented)
                     .onChange(of: llmBackend) { _, new in Preferences.llmBackend = new }
 
                     if llmBackend == .ollama {
-                        Text("Modell: gemma via http://127.0.0.1:11434 (~5 GB Download)")
+                        Text(t("Modell: gemma via http://127.0.0.1:11434 (~5 GB Download)",
+                               "Model: gemma via http://127.0.0.1:11434 (~5 GB download)"))
                             .font(.caption).foregroundStyle(.secondary)
-                        Button("Ollama-Setup kopieren (3 Befehle)") {
+                        Button(t("Ollama-Setup kopieren (3 Befehle)", "Copy Ollama setup (3 commands)")) {
                             let cmd = """
                             brew install ollama
                             brew services start ollama
@@ -65,15 +79,17 @@ struct SettingsView: View {
                             NSPasteboard.general.setString(cmd, forType: .string)
                         }
                         .font(.caption)
-                        Text("→ in Terminal einfügen, Enter. Lädt 5 GB Modell lokal.")
+                        Text(t("→ in Terminal einfügen, Enter. Lädt 5 GB Modell lokal.",
+                               "→ Paste into Terminal, hit Enter. Downloads the 5 GB model locally."))
                             .font(.caption2).foregroundStyle(.secondary)
                     }
                 }.padding(8)
             }
 
-            GroupBox("Stil-Vorgaben (wird an KI-Modi mitgegeben)") {
+            GroupBox(t("Stil-Vorgaben (wird an KI-Modi mitgegeben)", "Style guide (sent to AI modes)")) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Dauerhafte Anweisungen für Polished / Emoji / Compose. Beispiel: Immer Sie-Form. LHC-Brand-Voice. Keine Em-Dashes. Signatur: Beste Grüße, Nico.")
+                    Text(t("Dauerhafte Anweisungen für Polished / Emoji / Compose. Beispiel: Immer Sie-Form. LHC-Brand-Voice. Keine Em-Dashes. Signatur: Beste Grüße, Nico.",
+                           "Persistent instructions for Polished / Emoji / Compose. Example: Always formal tone. LHC brand voice. No em-dashes. Signature: Best regards, Nico."))
                         .font(.caption).foregroundStyle(.secondary)
                     TextEditor(text: $styleGuide)
                         .font(.body)
@@ -82,14 +98,14 @@ struct SettingsView: View {
                 }.padding(8)
             }
 
-            GroupBox("API-Keys (Keychain)") {
+            GroupBox(t("API-Keys (Keychain)", "API keys (Keychain)")) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("OpenAI (Whisper)").font(.caption).foregroundStyle(.secondary)
                     SecureField("sk-…", text: $openai).textFieldStyle(.roundedBorder)
-                    Text("Anthropic (Polished/Rage/Emoji)").font(.caption).foregroundStyle(.secondary)
+                    Text("Anthropic (Polished / Compose / Emoji)").font(.caption).foregroundStyle(.secondary)
                     SecureField("sk-ant-…", text: $anthropic).textFieldStyle(.roundedBorder)
                     HStack {
-                        Button("Speichern") {
+                        Button(t("Speichern", "Save")) {
                             if !openai.isEmpty { KeychainStore.set(openai, for: "openai_api_key") }
                             if !anthropic.isEmpty { KeychainStore.set(anthropic, for: "anthropic_api_key") }
                             Preferences.styleGuide = styleGuide
@@ -98,18 +114,18 @@ struct SettingsView: View {
                         }
                         .keyboardShortcut(.defaultAction)
                         if saved {
-                            Text("Gespeichert").font(.caption).foregroundStyle(.green)
+                            Text(t("Gespeichert", "Saved")).font(.caption).foregroundStyle(.green)
                         }
                     }
                 }.padding(8)
             }
 
-            GroupBox("Berechtigungen") {
+            GroupBox(t("Berechtigungen", "Permissions")) {
                 VStack(alignment: .leading, spacing: 6) {
-                    permissionRow("Mikrofon", hint: "Für Sprachaufnahme")
-                    permissionRow("Accessibility", hint: "Für globale Hotkeys + Text-Einfügen")
-                    permissionRow("Input Monitoring", hint: "Für Tastenerkennung")
-                    Button("System Settings öffnen") {
+                    permissionRow(t("Mikrofon", "Microphone"), hint: t("Für Sprachaufnahme", "For voice recording"))
+                    permissionRow("Accessibility", hint: t("Für globale Hotkeys + Text-Einfügen", "For global hotkeys + text injection"))
+                    permissionRow("Input Monitoring", hint: t("Für Tastenerkennung", "For key event detection"))
+                    Button(t("System Settings öffnen", "Open System Settings")) {
                         if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
                             NSWorkspace.shared.open(url)
                         }
@@ -119,7 +135,7 @@ struct SettingsView: View {
 
             updatesSection
 
-            GroupBox("Über Handsfree") {
+            GroupBox(t("Über Handsfree", "About Handsfree")) {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(spacing: 12) {
                         AsyncImage(url: URL(string: "https://cdn.bfldr.com/L672WKMM/as/kwkj9q4nwcrj2fht65973n5c/LhC_-_Logo_simple_-_white?auto=webp&format=png")) { phase in
@@ -138,7 +154,7 @@ struct SettingsView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Handsfree \(appVersion)")
                                 .font(.headline)
-                            Text("Struktur. Klarheit. Wirkung.")
+                            Text(t("Struktur. Klarheit. Wirkung.", "Structure. Clarity. Impact."))
                                 .font(.caption).italic().foregroundStyle(.secondary)
                         }
                     }
@@ -174,7 +190,7 @@ struct SettingsView: View {
                     HStack(spacing: 14) {
                         Link("Website", destination: URL(string: "https://lighthouseconsultings.de")!)
                         Link("GitHub", destination: URL(string: "https://github.com/Lighthouse-Consultings/handsfree")!)
-                        Link("Updates per Mail", destination: URL(string: "https://lighthouseconsultings.de/handsfree")!)
+                        Link(t("Updates per Mail", "Email updates"), destination: URL(string: "https://lighthouseconsultings.de/handsfree")!)
                     }.font(.caption)
 
                     Text("© 2026 Lighthouse Consultings")
@@ -209,7 +225,7 @@ struct SettingsView: View {
 
     private var whisperModelSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Picker("Modell", selection: $selectedWhisperModel) {
+            Picker(t("Modell", "Model"), selection: $selectedWhisperModel) {
                 ForEach(WhisperModel.allCases) { m in
                     Text("\(m.displayName) (\(m.sizeLabel))").tag(m)
                 }
@@ -224,7 +240,8 @@ struct SettingsView: View {
                 HStack(alignment: .top, spacing: 6) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.orange)
-                    Text("Tiny/Small halluzinieren bei Stille gelegentlich 'you' oder 'thanks for watching'. Für saubere deutsche Transkription Turbo empfohlen.")
+                    Text(t("Tiny/Small halluzinieren bei Stille gelegentlich 'you' oder 'thanks for watching'. Für saubere deutsche Transkription Turbo empfohlen.",
+                           "Tiny/Small occasionally hallucinate 'you' or 'thanks for watching' on silence. Turbo recommended for clean transcription."))
                         .font(.caption2)
                         .foregroundStyle(.orange)
                         .fixedSize(horizontal: false, vertical: true)
@@ -257,7 +274,7 @@ struct SettingsView: View {
                     Text(model.displayName).font(.body.weight(isSelected ? .semibold : .regular))
                     Text(model.sizeLabel).font(.caption).foregroundStyle(.secondary)
                     if isSelected {
-                        Text("ausgewählt").font(.caption2).padding(.horizontal, 5).padding(.vertical, 1)
+                        Text(t("ausgewählt", "selected")).font(.caption2).padding(.horizontal, 5).padding(.vertical, 1)
                             .background(Color.accentColor.opacity(0.15), in: Capsule())
                     }
                 }
@@ -266,22 +283,22 @@ struct SettingsView: View {
                     Text(downloadStatusText(for: model))
                         .font(.caption2).foregroundStyle(.secondary)
                 } else if installed {
-                    Text("vorhanden").font(.caption2).foregroundStyle(.green)
+                    Text(t("vorhanden", "installed")).font(.caption2).foregroundStyle(.green)
                 } else {
-                    Text("nicht installiert").font(.caption2).foregroundStyle(.secondary)
+                    Text(t("nicht installiert", "not installed")).font(.caption2).foregroundStyle(.secondary)
                 }
             }
 
             Spacer()
 
             if progress != nil {
-                Button("Abbrechen") { modelManager.cancelDownload(model) }
+                Button(t("Abbrechen", "Cancel")) { modelManager.cancelDownload(model) }
                     .buttonStyle(.bordered).controlSize(.small)
             } else if installed {
-                Button("Löschen") { modelManager.delete(model) }
+                Button(t("Löschen", "Delete")) { modelManager.delete(model) }
                     .buttonStyle(.bordered).controlSize(.small)
             } else {
-                Button("Laden") { modelManager.startDownload(model) }
+                Button(t("Laden", "Download")) { modelManager.startDownload(model) }
                     .buttonStyle(.borderedProminent).controlSize(.small)
             }
         }
@@ -301,29 +318,30 @@ struct SettingsView: View {
     private var updatesSection: some View {
         GroupBox("Updates") {
             VStack(alignment: .leading, spacing: 8) {
-                Toggle("Wöchentlich auf Updates prüfen", isOn: $updateCheckEnabled)
+                Toggle(t("Wöchentlich auf Updates prüfen", "Check for updates weekly"), isOn: $updateCheckEnabled)
                     .onChange(of: updateCheckEnabled) { _, new in Preferences.updateCheckEnabled = new }
-                Text("Pingt nur GitHub Releases (öffentlicher Endpoint, keine Identifikation, kein Telemetrie). Deaktiviert? → Du checkst Updates manuell.")
+                Text(t("Pingt nur GitHub Releases (öffentlicher Endpoint, keine Identifikation, kein Telemetrie). Deaktiviert? → Du checkst Updates manuell.",
+                       "Pings GitHub Releases only (public endpoint, no identification, no telemetry). Disabled? → You check for updates manually."))
                     .font(.caption2).foregroundStyle(.secondary)
 
                 HStack(spacing: 8) {
                     if updates.checking {
                         ProgressView().controlSize(.small)
-                        Text("Prüfe…").font(.caption).foregroundStyle(.secondary)
+                        Text(t("Prüfe…", "Checking…")).font(.caption).foregroundStyle(.secondary)
                     } else if let release = updates.latest, updates.hasUpdate {
                         Image(systemName: "arrow.down.circle.fill")
                             .foregroundStyle(Color(red: 0xC5/255.0, green: 0xA5/255.0, blue: 0x72/255.0))
-                        Text("Neue Version: \(release.tagName)").font(.caption)
+                        Text("\(t("Neue Version:", "New version:")) \(release.tagName)").font(.caption)
                         Button("Notes") { NSWorkspace.shared.open(release.htmlURL) }
                             .buttonStyle(.bordered).controlSize(.small)
                     } else if updates.latest != nil {
                         Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
-                        Text("Aktuell: v\(updates.currentVersion)").font(.caption).foregroundStyle(.secondary)
+                        Text("\(t("Aktuell:", "Current:")) v\(updates.currentVersion)").font(.caption).foregroundStyle(.secondary)
                     } else {
-                        Text("Aktuelle Version: v\(updates.currentVersion)").font(.caption).foregroundStyle(.secondary)
+                        Text("\(t("Aktuelle Version:", "Current version:")) v\(updates.currentVersion)").font(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
-                    Button("Jetzt prüfen") {
+                    Button(t("Jetzt prüfen", "Check now")) {
                         Task { await updates.check() }
                     }.controlSize(.small)
                 }

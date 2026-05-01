@@ -9,7 +9,19 @@ enum Preferences {
     private static let styleGuideKey = "handsfree.styleGuide"
     private static let whisperModelKey = "handsfree.whisperModel"
     private static let updateCheckEnabledKey = "handsfree.updateCheckEnabled"
+    private static let appLanguageKey = "handsfree.appLanguage"
     static let didChangeNotification = Notification.Name("handsfree.preferences.didChange")
+
+    static var appLanguage: AppLanguage {
+        get {
+            let raw = UserDefaults.standard.string(forKey: appLanguageKey) ?? AppLanguage.system.rawValue
+            return AppLanguage(rawValue: raw) ?? .system
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: appLanguageKey)
+            NotificationCenter.default.post(name: didChangeNotification, object: nil)
+        }
+    }
 
     static var updateCheckEnabled: Bool {
         get {

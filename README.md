@@ -146,7 +146,7 @@ See [CLAUDE.md](CLAUDE.md) for the full project brief used by coding agents on t
 
 ## Release history
 
-Full version log in [CHANGELOG.md](CHANGELOG.md). Latest: [v0.7.3](https://github.com/Lighthouse-Consultings/handsfree/releases/tag/v0.7.3).
+Full version log in [CHANGELOG.md](CHANGELOG.md). Latest: [v0.9.0](https://github.com/Lighthouse-Consultings/handsfree/releases/tag/v0.9.0).
 
 ---
 

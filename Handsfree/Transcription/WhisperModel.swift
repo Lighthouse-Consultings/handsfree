@@ -36,9 +36,9 @@ enum WhisperModel: String, CaseIterable, Identifiable {
 
     var subtitle: String {
         switch self {
-        case .turbo: return "Beste Qualität, ~1,5 GB RAM"
-        case .small: return "Guter Kompromiss, ~500 MB RAM"
-        case .tiny:  return "Für schwache Macs, ~150 MB RAM"
+        case .turbo: return t("Beste Qualität, ~1,5 GB RAM", "Best quality, ~1.5 GB RAM")
+        case .small: return t("Guter Kompromiss, ~500 MB RAM", "Good trade-off, ~500 MB RAM")
+        case .tiny:  return t("Für schwache Macs, ~150 MB RAM", "For low-end Macs, ~150 MB RAM")
         }
     }
 

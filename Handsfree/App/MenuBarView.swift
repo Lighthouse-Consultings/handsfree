@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MenuBarView: View {
     @EnvironmentObject var status: AppStatus
+    @EnvironmentObject var localization: LocalizationManager
     @ObservedObject private var updates = UpdateChecker.shared
     @State private var showSettings = false
 
@@ -40,8 +41,8 @@ struct MenuBarView: View {
             Image(systemName: "arrow.down.circle.fill")
                 .foregroundStyle(Color(red: 0xC5/255.0, green: 0xA5/255.0, blue: 0x72/255.0))
             VStack(alignment: .leading, spacing: 2) {
-                Text("Update verfügbar: \(release.tagName)").font(.caption.weight(.semibold))
-                Text("Aktuell: v\(updates.currentVersion)").font(.caption2).foregroundStyle(.secondary)
+                Text("\(t("Update verfügbar:", "Update available:")) \(release.tagName)").font(.caption.weight(.semibold))
+                Text("\(t("Aktuell:", "Current:")) v\(updates.currentVersion)").font(.caption2).foregroundStyle(.secondary)
             }
             Spacer()
             Button("Notes") { NSWorkspace.shared.open(release.htmlURL) }
@@ -88,7 +89,7 @@ struct MenuBarView: View {
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
                     .textSelection(.enabled)
-                Button("Fehler kopieren") {
+                Button(t("Fehler kopieren", "Copy error")) {
                     NSPasteboard.general.clearContents()
                     NSPasteboard.general.setString(status.statusText, forType: .string)
                 }
@@ -104,9 +105,9 @@ struct MenuBarView: View {
     private var footer: some View {
         VStack(spacing: 4) {
             HStack {
-                Button("Einstellungen") { showSettings = true }
+                Button(t("Einstellungen", "Settings")) { showSettings = true }
                 Spacer()
-                Button("Beenden") { NSApp.terminate(nil) }
+                Button(t("Beenden", "Quit")) { NSApp.terminate(nil) }
             }
             HStack {
                 Spacer()

@@ -14,10 +14,10 @@ enum Mode: String, CaseIterable {
 
     var subtitle: String {
         switch self {
-        case .raw:      return "Sprache rein. Text raus."
-        case .polished: return "Geschrieben sprechen."
-        case .compose:  return "Instruction + Clipboard → Antwort."
-        case .emoji:    return "Text mit Emojis."
+        case .raw:      return t("Sprache rein. Text raus.", "Speech in. Text out.")
+        case .polished: return t("Geschrieben sprechen.", "Speak it written.")
+        case .compose:  return t("Instruction + Clipboard → Antwort.", "Instruction + clipboard → reply.")
+        case .emoji:    return t("Text mit Emojis.", "Text with emojis.")
         }
     }
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.9.0 — 2026-05-01 — DE/EN-Umschalter (App-Lokalisierung)
+- **Sprach-Picker oben in den Einstellungen** (System / Deutsch / English) — schaltet die komplette UI-Textdarstellung live um, ohne App-Neustart. Standard `System` folgt der Mac-Sprache.
+- Lokalisierte Bereiche: Menubar-Popover (Header, Status-Label, Update-Banner, Footer), Mode-Untertitel (Sprache rein. Text raus. / Speech in. Text out. usw.), kompletter Settings-Dialog (Transkription, LLM, Stil-Vorgaben, API-Keys, Berechtigungen, Updates, Über), Whisper-Modell-Picker inkl. Status-Labels und Tiny/Small-Warnung.
+- Markennamen unverändert (Handsfree, Lighthouse Consultings, Hotkey-Symbole).
+- Persistenz via `UserDefaults` (`handsfree.appLanguage`), thread-safe `LocalizationManager` mit Lock-protegtem Spiegel — keine Main-Actor-Crashes beim Lookup aus Modell-Code.
+- Rationale: Handsfree wird jetzt für englischsprachiges Publikum zugänglich — bisher war alles in Deutsch hartkodiert.
+
 ## v0.8.1 — 2026-04-29 — "you"-Halluzination gehärtet
 - **Sprache fixiert auf Deutsch** statt Auto-Detect: `LocalWhisperClient` und `WhisperClient` verwenden jetzt `de` als Default. Bei kurzen oder leisen Aufnahmen wurde Englisch fehlerkannt, was die englischen Standard-Halluzinationen ("you", "thanks for watching") triggerte.
 - **`-sns` (suppress non-speech tokens)** an `whisper-cli` ergänzt: blockiert Stille-Halluzinationen direkt im Sampler.
