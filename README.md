@@ -1,170 +1,157 @@
-# Handsfree
+<div align="center">
 
-Native macOS menubar dictation app. Hold a hotkey, speak, release: text appears at your cursor in any app. Works fully offline.
+# 🔦 Flinktext
 
-![icon](docs/icon_1024.png)
+### Blitztext, aber fertig.
 
-A privacy-first alternative to Wispr Flow / Superwhisper. Open source, DSGVO-konform, no telemetry, no account required. Built and maintained by [Lighthouse Consultings](https://lighthouseconsultings.de) as the demo project for the Claude Code + Codex workflow.
+Diktieren auf dem Mac. Lokal, DSGVO-konform einsetzbar, Made in Germany.
+Kein Code, kein Kompilieren: DMG laden, loslegen.
 
----
+[![Lizenz: MIT](https://img.shields.io/badge/Lizenz-MIT-C5A065.svg)](LICENSE)
+[![Plattform: macOS 14+](https://img.shields.io/badge/macOS-14%2B-0C2E4E.svg)](#systemvoraussetzungen)
+[![Download DMG](https://img.shields.io/badge/Download-DMG-0C2E4E.svg)](https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Handsfree.dmg)
 
-## Download
+</div>
 
-[**Latest release (DMG)**](https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Handsfree.dmg) → drag to `/Applications`, open once, grant Mic + Accessibility.
-
-Universal binary (Apple Silicon + Intel). macOS 14 (Sonoma) or newer.
-
-For first-run install instructions, including macOS Gatekeeper handling for ad-hoc signed apps, see the `LIES_MICH.txt` inside the DMG.
-
----
-
-## Modes
-
-| Mode | Hotkey | What it does |
-|---|---|---|
-| **Raw** | `⌥ᴿ + ⇧` | 1:1 transcript, no LLM |
-| **Polished** | `⌥ᴿ + ⌃` | Spoken style cleaned to written style (fillers removed, syntax tightened) |
-| **Compose** | `⌥ᴿ + ⌥ᴸ` | Speak an instruction. Optional `⌘C` before triggering uses the clipboard as context. LLM writes the final text |
-| **Emoji** | `⌥ᴿ + ⌘` | Original text with tasteful emojis added |
-
-`⌥ᴿ` = Right-Option key (right of spacebar). Hold both, speak, release.
-
-### Compose examples
-
-```
-No clipboard:
-  Hotkey + "schreib eine Absage an Martin für Donnerstag, freundlich"
-  → Full email appears at cursor
-
-With clipboard (Cmd+C a passage first):
-  Hotkey + "fass das in 3 Bulletpoints zusammen"
-  → 3 bullets replace what you had
-```
+> Hinweis: Repository und Bundle-ID heißen aus historischen Gründen noch `handsfree` (vormaliger Produktname). Der Marken- und Produktname ist **Flinktext**. Die technische Umbenennung folgt.
 
 ---
 
-## Backends
+## Was ist Flinktext?
 
-Both transcription and LLM can run **fully locally**. Zero data leaves the Mac in that mode.
+Eine native macOS-Menüleisten-App zum Diktieren. Hotkey halten, sprechen, loslassen: Der Text erscheint am Cursor, in jeder App. Standardmäßig läuft die Spracherkennung zu 100 % lokal auf deinem Gerät.
 
-| Layer | Cloud option | Local option |
-|---|---|---|
-| **Transcription (STT)** | OpenAI `gpt-4o-transcribe` | `whisper.cpp` + ggml model (Tiny / Small / Turbo, 75 MB - 1,5 GB) |
-| **LLM (Polished/Emoji/Compose)** | Anthropic `claude-sonnet-4-6` | Ollama + any local model (Gemma, Llama, …) |
+Flinktext ist die fertige Version dessen, was die Vorlage [Blitztext](https://github.com/cmagnussen/blitztext) als Idee skizziert hat: kein Quellcode-Bauen, keine Anmeldung, keine Cloud im Standard. Du lädst eine DMG und legst los.
 
-Toggle in Settings. Raw mode works without any LLM backend at all.
+<div align="center">
 
-API keys are stored in macOS Keychain (`WhenUnlockedThisDeviceOnly`, no iCloud sync). Local Whisper models can be downloaded directly from the in-app model picker — no Terminal needed.
+<!-- PLATZHALTER: Demo-GIF (Hotkey halten -> sprechen -> Text erscheint am Cursor). Ersetzen durch docs/demo.gif -->
+`[ DEMO-GIF: Hotkey halten, sprechen, loslassen → Text am Cursor ]`
 
----
+<!-- PLATZHALTER: Screenshot Menüleisten-Popover mit den 4 Modi. Ersetzen durch docs/screenshot-menubar.png -->
+`[ SCREENSHOT: Menüleisten-Popover mit den 4 Modi ]`
 
-## Privacy
-
-- **No telemetry, no analytics, no crash reporter.** The app makes zero outbound connections in the background.
-- Outbound traffic happens only on explicit user action: API calls to OpenAI/Anthropic when you trigger a hotkey with cloud backend selected, or model downloads from HuggingFace when you click "Laden" in Settings.
-- Dictation content is **never logged** to disk or to the macOS Unified Log.
-- API keys never leave the device except as `Authorization` headers to the configured cloud provider.
-- Source code is open — verify the claims yourself.
+</div>
 
 ---
 
-## First run
+## Download (kein Build nötig)
 
-Grant three macOS permissions (System Settings → Privacy & Security):
+**[Flinktext.dmg herunterladen](https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Handsfree.dmg)**
 
-1. **Microphone** — prompted automatically on first dictation
-2. **Accessibility** — required for global hotkeys + text injection. Add `Handsfree.app` manually.
-3. **Input Monitoring** — optional, harmless to grant
+1. DMG öffnen, App in den Programme-Ordner ziehen.
+2. Flinktext starten. Beim ersten Start fragt macOS nach Mikrofon-, Bedienungshilfen- und Eingabeüberwachungs-Rechten (nötig für globalen Hotkey und Text am Cursor).
+3. Hotkey halten, sprechen, loslassen. Fertig.
 
-Open the menubar popover → Settings → paste API keys, OR toggle to Local backends and download a Whisper model with one click.
+Installationshinweise liegen als `LIES_MICH.txt` in der DMG. Entwickler:innen, die lieber selbst kompilieren, finden den Weg unter [Build aus dem Quellcode](#build-aus-dem-quellcode-für-entwicklerinnen).
 
 ---
 
-## Build from source
+## Die 4 Modi
 
-Requirements: macOS 14+, Xcode 16, [xcodegen](https://github.com/yonaskolb/XcodeGen).
+Jeder Modus liegt auf einem eigenen Hotkey-Akkord (Right-Option als Auslöser plus Zusatztaste):
+
+| Modus | Was er tut |
+|---|---|
+| **Roh** | 1:1-Transkript. Genau dein gesprochenes Wort, ohne Nachbearbeitung. |
+| **Poliert** | Entfernt Füllwörter und glättet Grammatik zu sauberem Schriftdeutsch. |
+| **Compose** | Sprachbefehl statt Diktat: Du sagst, was geschrieben werden soll, das LLM formuliert es. |
+| **Emoji** | Reichert den Text mit passenden Emojis an. ✨ |
+
+Roh läuft komplett ohne Sprachmodell. Poliert, Compose und Emoji nutzen ein Sprachmodell zur Nachbearbeitung, lokal oder optional per Cloud-Backend (siehe unten).
+
+---
+
+## Datenschutz und DSGVO
+
+Flinktext ist für datensensible Umgebungen gebaut: Schulen, Behörden, Institute, Kanzleien, Praxen.
+
+- **Standardmäßig 100 % lokal.** Die Spracherkennung läuft über ein gebündeltes `whisper.cpp` mit on-device-Modellen. Dein Audio verlässt das Gerät nicht.
+- **Keine Telemetrie, kein Tracking, kein Account.** Kein Analytics-SDK, kein Crash-Reporter, keine Anmeldung.
+- **Keychain-only.** API-Schlüssel liegen ausschließlich im macOS-Schlüsselbund (`ThisDeviceOnly`, kein iCloud-Sync).
+- **Open Source (MIT).** Der Code ist öffentlich und prüfbar.
+- **Prompt-Injection-Hardening** in der Text-Einfügung (Steuerzeichen werden vor dem Einfügen entfernt).
+- **DSGVO-konform einsetzbar.** Lokale Verarbeitung im Standard-Modus, AVV auf Anfrage.
+
+**Cloud-Backends sind optional und standardmäßig aus.** Wer mag, kann OpenAI, Anthropic oder ein entferntes Ollama als Nachbearbeitungs-Backend einschalten. Das passiert nur aktiv durch dich, mit deinem eigenen API-Schlüssel. Ohne diese Aktivierung verlässt nichts dein Gerät.
+
+> Flinktext ist nicht „zertifiziert" oder pauschal „rechtssicher". Es ist ein Werkzeug, das DSGVO-konformen Einsatz ermöglicht, weil es im Standard lokal verarbeitet. Die rechtskonforme Einbettung in deine Organisation bleibt dein Verfahren. Einen AVV stellen wir auf Anfrage bereit.
+
+---
+
+## 🧭 Systemvoraussetzungen
+
+- macOS 14 (Sonoma) oder neuer
+- Apple Silicon (das gebündelte lokale Whisper ist arm64). Intel-Macs können die optionalen Cloud-Backends nutzen.
+
+---
+
+## Herkunft: der fertige Blitztext
+
+Flinktext steht in der Linie von **[Blitztext](https://github.com/cmagnussen/blitztext)** von cmagnussen (MIT-Lizenz, 171 GitHub-Stars, 67 Forks). Blitztext hat die Idee einer lokalen Mac-Diktier-App populär gemacht, blieb aber „Build-from-Source" und ist seit einigen Commits inaktiv.
+
+Flinktext nimmt diesen Faden auf und liefert die fertige App: DMG laden statt kompilieren, dazu vier Modi, lokale Whisper-Modelle gebündelt und ein klarer DSGVO-Fokus. Dank MIT-Lizenz ist diese Ableitung erlaubt. Dank und Credit an Blitztext.
+
+---
+
+## Build aus dem Quellcode (für Entwickler:innen)
+
+Die meisten Nutzer:innen brauchen das nicht: die [DMG](#download-kein-build-nötig) reicht. Wer selbst bauen möchte:
 
 ```bash
 git clone https://github.com/Lighthouse-Consultings/handsfree.git
 cd handsfree
-brew install xcodegen
-xcodegen generate
-open Handsfree.xcodeproj
+xcodegen generate   # erzeugt das Xcode-Projekt aus project.yml
+xcodebuild -scheme Handsfree -configuration Release build
 ```
 
-In Xcode: select target `Handsfree` → Signing & Capabilities → pick your Team (so Mic + Accessibility grants survive rebuilds) → ⌘R.
+Voraussetzungen: Xcode 16+, `xcodegen`. Das Projekt nutzt reines SwiftUI/AppKit ohne externe Abhängigkeiten. Tests laufen über `xcodebuild test -scheme Handsfree -destination 'platform=macOS,arch=arm64'`.
 
 ---
 
-## Style Guide field
+## Lizenz
 
-Settings has a free-text "Stil-Vorgaben" field. Content is appended to every LLM system prompt (both Anthropic and Ollama paths). Useful for persistent voice/branding instructions.
-
-Example:
-
-```
-Immer Sie-Form, keine Em-Dashes.
-Signatur: Beste Grüße, Nico Röpnack.
-Fachbegriffe: Smartsheet (kein Leerzeichen), FEW Automotive.
-```
-
-Applied to Polished, Emoji, and Compose. Raw bypasses the LLM entirely and ignores the style guide.
+[MIT](LICENSE). In der Tradition von Blitztext (ebenfalls MIT).
 
 ---
 
-## Security
+## English
 
-Threat model and hardening notes live in [SECURITY.md](SECURITY.md). Highlights:
+### Flinktext: the ready-to-run Blitztext
 
-- Keychain with `WhenUnlockedThisDeviceOnly`, no iCloud sync
-- Ephemeral `URLSession` per API client (no cookies / shared cache)
-- Pasteboard saved before injection, restored after the target app consumes (change-count watch, not a fixed timer)
-- LLM user input wrapped in delimiter blocks with prompt-injection guardrails
-- Recording hard-capped at 60 seconds
-- Control characters stripped from injected text
-- Hardened runtime enabled
+Local, private dictation for your Mac. No build, no account, no cloud.
 
----
+Hold a hotkey, speak, release: your text appears at the cursor, in any app. Speech recognition runs **100 % locally by default** via a bundled `whisper.cpp` with on-device models. Your audio never leaves the device.
 
-## Architecture
+**Just download and run, no compiling required:**
 
-```
-Handsfree/
-├── App/             HandsfreeApp, AppDelegate, MenuBarController, MenuBarView, Orchestrator, AppStatus, SoundFX
-├── Audio/           AudioRecorder (AVAudioEngine → 16 kHz mono Int16 WAV)
-├── Hotkeys/         GlobalHotkeyManager (NSEvent flagsChanged, Right-Option + secondary modifier)
-├── Transcription/   WhisperClient (OpenAI), LocalWhisperClient (whisper.cpp), WhisperModel, WhisperModelManager
-├── Postprocess/     LLMClient (Anthropic), OllamaClient (localhost:11434)
-├── Injection/       TextInjector (CGEvent Cmd+V + pasteboard save/restore)
-├── Settings/        KeychainStore, Preferences, SettingsView
-└── Models/          Mode enum, errors
-```
+**[Download Flinktext.dmg](https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Handsfree.dmg)**
 
-See [CLAUDE.md](CLAUDE.md) for the full project brief used by coding agents on this repo.
+**Four modes:**
+- **Raw** : verbatim transcript, no language model.
+- **Polished** : removes filler words, cleans up grammar.
+- **Compose** : speak an instruction, the LLM writes it for you.
+- **Emoji** : sprinkles in fitting emojis.
 
----
+**Privacy by default:**
+- 100 % local out of the box. Audio stays on your Mac.
+- No telemetry, no tracking, no account.
+- Keychain-only secrets (`ThisDeviceOnly`, no iCloud sync).
+- Open Source (MIT), the code is auditable.
+- Cloud backends (OpenAI / Anthropic / remote Ollama) are **opt-in and off by default**: you enable them with your own API key, or nothing ever leaves your device.
 
-## Release history
+**Lineage:** Flinktext is the finished version of [Blitztext](https://github.com/cmagnussen/blitztext) by cmagnussen (MIT, 171 stars, 67 forks), which was build-from-source only and is now inactive. MIT permits this derivative. Credit to Blitztext.
 
-Full version log in [CHANGELOG.md](CHANGELOG.md). Latest: [v0.9.0](https://github.com/Lighthouse-Consultings/handsfree/releases/tag/v0.9.0).
+**Requirements:** macOS 14+ (Sonoma), Apple Silicon for the bundled local Whisper.
+
+**Build from source:** see [above](#build-aus-dem-quellcode-für-entwicklerinnen). Most users should just grab the DMG.
+
+License: [MIT](LICENSE).
 
 ---
 
-## Known limitations
+<div align="center">
 
-- **Ad-hoc code signing** resets Accessibility / Input Monitoring permission on every version bump. The grant survives once the user re-adds the new binary in System Settings. Eliminating this requires Apple Developer ID.
-- **Bundled `whisper-cli` is arm64-only.** Intel Macs can still use Cloud Whisper, or build whisper.cpp from source.
-- **Ollama must be running** for local LLM (`brew services list` should show ollama as `started`).
-- **No text-to-speech** — Handsfree is one-way (voice → text), no read-back.
+Ein Produkt von [Lighthouse Consultings](https://lighthouseconsultings.de/flinktext/). ⚓️
 
----
-
-## Contributing
-
-Issues and PRs welcome. Please open an issue first for non-trivial changes so we can align on scope.
-
----
-
-## License
-
-[MIT](LICENSE) © 2026 Lighthouse Consultings GmbH.
+</div>

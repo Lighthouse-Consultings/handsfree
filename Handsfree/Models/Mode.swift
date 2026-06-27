@@ -5,10 +5,10 @@ enum Mode: String, CaseIterable {
 
     var title: String {
         switch self {
-        case .raw:      return "Handsfree"
-        case .polished: return "Handsfree+"
-        case .compose:  return "Handsfree Compose"
-        case .emoji:    return "Handsfree Emoji"
+        case .raw:      return "Flinktext"
+        case .polished: return "Flinktext+"
+        case .compose:  return "Flinktext Compose"
+        case .emoji:    return "Flinktext Emoji"
         }
     }
 

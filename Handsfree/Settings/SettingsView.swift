@@ -135,7 +135,7 @@ struct SettingsView: View {
 
             updatesSection
 
-            GroupBox(t("Über Handsfree", "About Handsfree")) {
+            GroupBox(t("Über Flinktext", "About Flinktext")) {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(spacing: 12) {
                         AsyncImage(url: URL(string: "https://cdn.bfldr.com/L672WKMM/as/kwkj9q4nwcrj2fht65973n5c/LhC_-_Logo_simple_-_white?auto=webp&format=png")) { phase in
@@ -152,7 +152,7 @@ struct SettingsView: View {
                             }
                         }
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Handsfree \(appVersion)")
+                            Text("Flinktext \(appVersion)")
                                 .font(.headline)
                             Text(t("Struktur. Klarheit. Wirkung.", "Structure. Clarity. Impact."))
                                 .font(.caption).italic().foregroundStyle(.secondary)

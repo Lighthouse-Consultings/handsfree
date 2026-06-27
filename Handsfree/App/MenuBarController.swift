@@ -26,7 +26,7 @@ final class MenuBarController {
         popover.contentViewController = host
 
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "waveform", accessibilityDescription: "Handsfree")
+            button.image = NSImage(systemSymbolName: "waveform", accessibilityDescription: "Flinktext")
             button.action = #selector(togglePopover)
             button.target = self
         }
