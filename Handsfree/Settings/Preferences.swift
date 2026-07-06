@@ -10,6 +10,7 @@ enum Preferences {
     private static let whisperModelKey = "handsfree.whisperModel"
     private static let updateCheckEnabledKey = "handsfree.updateCheckEnabled"
     private static let appLanguageKey = "handsfree.appLanguage"
+    private static let onboardingCompletedKey = "handsfree.onboardingCompleted"
     static let didChangeNotification = Notification.Name("handsfree.preferences.didChange")
 
     static var appLanguage: AppLanguage {
@@ -71,6 +72,11 @@ enum Preferences {
             UserDefaults.standard.set(newValue.rawValue, forKey: llmBackendKey)
             NotificationCenter.default.post(name: didChangeNotification, object: nil)
         }
+    }
+
+    static var onboardingCompleted: Bool {
+        get { UserDefaults.standard.bool(forKey: onboardingCompletedKey) }
+        set { UserDefaults.standard.set(newValue, forKey: onboardingCompletedKey) }
     }
 
     static func notifyChanged() {

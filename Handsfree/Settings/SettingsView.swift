@@ -122,12 +122,15 @@ struct SettingsView: View {
 
             GroupBox(t("Berechtigungen", "Permissions")) {
                 VStack(alignment: .leading, spacing: 6) {
-                    permissionRow(t("Mikrofon", "Microphone"), hint: t("Für Sprachaufnahme", "For voice recording"))
-                    permissionRow("Accessibility", hint: t("Für globale Hotkeys + Text-Einfügen", "For global hotkeys + text injection"))
-                    permissionRow("Input Monitoring", hint: t("Für Tastenerkennung", "For key event detection"))
-                    Button(t("System Settings öffnen", "Open System Settings")) {
-                        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
-                            NSWorkspace.shared.open(url)
+                    permissionRow(t("Mikrofon", "Microphone"), hint: t("Für Sprachaufnahme", "For voice recording"), granted: PermissionCheck.microphone)
+                    permissionRow("Accessibility", hint: t("Für globale Hotkeys + Text-Einfügen", "For global hotkeys + text injection"), granted: PermissionCheck.accessibility)
+                    permissionRow("Input Monitoring", hint: t("Für Tastenerkennung", "For key event detection"), granted: PermissionCheck.inputMonitoring)
+                    HStack {
+                        Button(t("System Settings öffnen", "Open System Settings")) {
+                            PermissionCheck.openSettingsPane("Privacy_Accessibility")
+                        }
+                        Button(t("Einrichtung erneut zeigen", "Show setup again")) {
+                            OnboardingWindowController.shared.show()
                         }
                     }
                 }.padding(8)
@@ -211,9 +214,10 @@ struct SettingsView: View {
         return "v\(v)"
     }
 
-    private func permissionRow(_ title: String, hint: String) -> some View {
+    private func permissionRow(_ title: String, hint: String, granted: Bool) -> some View {
         HStack {
-            Image(systemName: "circle.dashed").foregroundStyle(.secondary)
+            Image(systemName: granted ? "checkmark.circle.fill" : "circle.dashed")
+                .foregroundStyle(granted ? AnyShapeStyle(.green) : AnyShapeStyle(.secondary))
             VStack(alignment: .leading) {
                 Text(title).font(.body)
                 Text(hint).font(.caption).foregroundStyle(.secondary)

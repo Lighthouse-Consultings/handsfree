@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		028CA9720825B4472DEED711 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A77212ADB0E0DD4D052BF /* OnboardingView.swift */; };
 		0882A145C25F9C79F362302D /* WhisperModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB59562890831C46A4E88B52 /* WhisperModelManager.swift */; };
 		0E81532E222BAA9E4CC3AB20 /* OllamaClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BEC1EAFA31F9D94BC9CA75 /* OllamaClient.swift */; };
 		117A95DB3526EBFF9E2EA0CB /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9B53112686F1667C108AC9 /* MenuBarView.swift */; };
@@ -58,6 +59,7 @@
 		5F9B53112686F1667C108AC9 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		68B710BC5FEC29D784621C24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6AC4E3347676D8E4BAE5F67D /* Mode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mode.swift; sourceTree = "<group>"; };
+		735A77212ADB0E0DD4D052BF /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		74FB2108AECCB4EA69DACC48 /* HandsfreeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandsfreeApp.swift; sourceTree = "<group>"; };
 		7B6C588485F7435B3D22C4D4 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		96F015F7A9ED0BADDAAE1454 /* Handsfree.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Handsfree.entitlements; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				74FB2108AECCB4EA69DACC48 /* HandsfreeApp.swift */,
 				2C3DF71A237251DD23E09A52 /* MenuBarController.swift */,
 				5F9B53112686F1667C108AC9 /* MenuBarView.swift */,
+				735A77212ADB0E0DD4D052BF /* OnboardingView.swift */,
 				B169F4B042C3148CA8881A99 /* Orchestrator.swift */,
 				D13ADB35AFDFCD9B97E886FC /* SoundFX.swift */,
 				FC35B80D4A63169BA99AC305 /* UpdateChecker.swift */,
@@ -308,6 +311,7 @@
 				117A95DB3526EBFF9E2EA0CB /* MenuBarView.swift in Sources */,
 				76217616249F291DEF8B6616 /* Mode.swift in Sources */,
 				0E81532E222BAA9E4CC3AB20 /* OllamaClient.swift in Sources */,
+				028CA9720825B4472DEED711 /* OnboardingView.swift in Sources */,
 				ED726AB239075AEA15C8C621 /* Orchestrator.swift in Sources */,
 				47789A19B21A24C614D27312 /* Preferences.swift in Sources */,
 				162E37BD47CAF6F29302F9B2 /* SettingsView.swift in Sources */,
