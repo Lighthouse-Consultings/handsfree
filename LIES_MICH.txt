@@ -1,0 +1,56 @@
+FLINKTEXT — Diktieren auf dem Mac. Lokal, privat, gratis.
+==========================================================
+
+INSTALLATION
+------------
+1. Flinktext.app in den Ordner "Applications" (Programme) ziehen.
+2. Flinktext aus dem Programme-Ordner starten.
+   Die App ist mit Apple Developer ID signiert und von Apple notarisiert:
+   Es erscheint keine Gatekeeper-Warnung, kein Rechtsklick-Trick noetig.
+3. Beim ersten Start fragt macOS nach drei Berechtigungen:
+   - Mikrofon (fuer die Aufnahme)
+   - Bedienungshilfen (fuer den globalen Hotkey und Text am Cursor)
+   - Eingabeueberwachung (fuer die Hotkey-Erkennung)
+   Alle drei bestaetigen, dann ist Flinktext einsatzbereit.
+
+BEDIENUNG
+---------
+Rechte Wahltaste (Right-Option) halten, sprechen, loslassen:
+Der Text erscheint am Cursor, in jeder App.
+
+Vier Modi ueber Zusatztasten (rechte Wahltaste plus ...):
+  + Umschalt (Shift)   Roh: 1:1-Transkript ohne Nachbearbeitung
+  + Steuerung (Ctrl)   Poliert: glaettet zu sauberem Schriftdeutsch
+  + linke Wahltaste    Compose: du sagst, was geschrieben werden soll
+  + Befehl (Cmd)       Emoji: reichert den Text mit Emojis an
+
+Die Spracherkennung laeuft standardmaessig zu 100 % lokal auf deinem
+Geraet. Kein Konto, keine Cloud, keine Telemetrie.
+
+UPDATE VON HANDSFREE (v0.9.x ODER AELTER)?
+------------------------------------------
+Flinktext ist der neue Name von Handsfree. Zwei einmalige Hinweise:
+1. Die alte Handsfree.app im Programme-Ordner loeschen, sonst liegen
+   beide Apps nebeneinander.
+2. Falls du API-Schluessel hinterlegt hattest, fragt der macOS-
+   Schluesselbund einmal pro Schluessel nach Zugriff. Gib dein
+   Anmelde-Passwort ein und klicke "IMMER ERLAUBEN" (nicht nur
+   "Erlauben", sonst kommt die Frage wieder). Das liegt am Wechsel
+   auf die neue Apple-Signatur und passiert nur dieses eine Mal.
+3. Bleibt die Aufnahme leer ("Aufnahme leer, 0/44 B"), obwohl die
+   Berechtigungen in den Systemeinstellungen aktiv aussehen? Dann
+   stammen die Eintraege noch von der alten Handsfree-Version und
+   gelten nicht fuer die neue Signatur. Einmal im Terminal:
+     tccutil reset Accessibility com.lighthouseconsultings.handsfree
+     tccutil reset ListenEvent com.lighthouseconsultings.handsfree
+     tccutil reset Microphone com.lighthouseconsultings.handsfree
+   Danach Flinktext neu starten und die drei frischen Abfragen
+   bestaetigen.
+
+FRAGEN, FEEDBACK
+----------------
+Web:    https://lighthouseconsultings.de/flinktext/
+Code:   https://github.com/Lighthouse-Consultings/handsfree
+E-Mail: addvalue@lighthouseconsultings.com
+
+(c) 2026 Lighthouse Consultings. Open Source, MIT-Lizenz.
