@@ -39,7 +39,15 @@ struct OllamaClient {
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: payload)
 
-        let (data, response) = try await Self.session.data(for: request)
+        let data: Data
+        let response: URLResponse
+        do {
+            (data, response) = try await Self.session.data(for: request)
+        } catch let e as URLError where e.code == .cannotConnectToHost || e.code == .timedOut {
+            throw HandsfreeError.postprocess(t(
+                "Lokales Sprachmodell (Ollama) läuft nicht. Setup: Einstellungen → LLM → Ollama-Anleitung. Alternativ bewusst ein Cloud-Backend aktivieren.",
+                "Local language model (Ollama) is not running. Setup: Settings → LLM → Ollama guide. Alternatively enable a cloud backend deliberately."))
+        }
         guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
             let msg = String(data: data, encoding: .utf8) ?? "unknown"
             throw HandsfreeError.postprocess("ollama: \(msg.prefix(200))")

@@ -54,8 +54,8 @@ enum Preferences {
 
     static var backend: TranscriptionBackend {
         get {
-            let raw = UserDefaults.standard.string(forKey: backendKey) ?? TranscriptionBackend.api.rawValue
-            return TranscriptionBackend(rawValue: raw) ?? .api
+            let raw = UserDefaults.standard.string(forKey: backendKey) ?? TranscriptionBackend.local.rawValue
+            return TranscriptionBackend(rawValue: raw) ?? .local
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: backendKey)
@@ -65,8 +65,8 @@ enum Preferences {
 
     static var llmBackend: LLMBackend {
         get {
-            let raw = UserDefaults.standard.string(forKey: llmBackendKey) ?? LLMBackend.anthropic.rawValue
-            return LLMBackend(rawValue: raw) ?? .anthropic
+            let raw = UserDefaults.standard.string(forKey: llmBackendKey) ?? LLMBackend.ollama.rawValue
+            return LLMBackend(rawValue: raw) ?? .ollama
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: llmBackendKey)
