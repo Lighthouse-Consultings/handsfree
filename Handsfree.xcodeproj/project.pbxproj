@@ -435,6 +435,7 @@
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lighthouseconsultings.handsfree;
+				PRODUCT_NAME = Flinktext;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -529,6 +530,7 @@
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lighthouseconsultings.handsfree;
+				PRODUCT_NAME = Flinktext;
 				SDKROOT = macosx;
 			};
 			name = Debug;
