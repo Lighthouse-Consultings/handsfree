@@ -9,7 +9,7 @@ Kein Code, kein Kompilieren: DMG laden, loslegen.
 
 [![Lizenz: MIT](https://img.shields.io/badge/Lizenz-MIT-C5A065.svg)](LICENSE)
 [![Plattform: macOS 14+](https://img.shields.io/badge/macOS-14%2B-0C2E4E.svg)](#systemvoraussetzungen)
-[![Download DMG](https://img.shields.io/badge/Download-DMG-0C2E4E.svg)](https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Handsfree.dmg)
+[![Download DMG](https://img.shields.io/badge/Download-DMG-0C2E4E.svg)](https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Flinktext.dmg)
 
 </div>
 
@@ -37,13 +37,13 @@ Flinktext ist die fertige Version dessen, was die Vorlage [Blitztext](https://gi
 
 ## Download (kein Build nötig)
 
-**[Flinktext.dmg herunterladen](https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Handsfree.dmg)**
+**[Flinktext.dmg herunterladen](https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Flinktext.dmg)**
 
 1. DMG öffnen, App in den Programme-Ordner ziehen.
 2. Flinktext starten. Beim ersten Start fragt macOS nach Mikrofon-, Bedienungshilfen- und Eingabeüberwachungs-Rechten (nötig für globalen Hotkey und Text am Cursor).
 3. Hotkey halten, sprechen, loslassen. Fertig.
 
-Installationshinweise liegen als `LIES_MICH.txt` in der DMG. Entwickler:innen, die lieber selbst kompilieren, finden den Weg unter [Build aus dem Quellcode](#build-aus-dem-quellcode-für-entwicklerinnen).
+Die App ist mit Apple Developer ID signiert und von Apple notarisiert (ab v0.10.0): keine Gatekeeper-Warnung, kein Rechtsklick-Trick nötig. Entwickler:innen, die lieber selbst kompilieren, finden den Weg unter [Build aus dem Quellcode](#build-aus-dem-quellcode-für-entwicklerinnen).
 
 ---
 
@@ -70,6 +70,7 @@ Flinktext ist für datensensible Umgebungen gebaut: Schulen, Behörden, Institut
 - **Keine Telemetrie, kein Tracking, kein Account.** Kein Analytics-SDK, kein Crash-Reporter, keine Anmeldung.
 - **Keychain-only.** API-Schlüssel liegen ausschließlich im macOS-Schlüsselbund (`ThisDeviceOnly`, kein iCloud-Sync).
 - **Open Source (MIT).** Der Code ist öffentlich und prüfbar.
+- **Signiert und notarisiert.** Ab v0.10.0 mit Apple Developer ID signiert und von Apple notarisiert (Malware-Scan durch Apple).
 - **Prompt-Injection-Hardening** in der Text-Einfügung (Steuerzeichen werden vor dem Einfügen entfernt).
 - **DSGVO-konform einsetzbar.** Lokale Verarbeitung im Standard-Modus, AVV auf Anfrage.
 
@@ -125,7 +126,7 @@ Hold a hotkey, speak, release: your text appears at the cursor, in any app. Spee
 
 **Just download and run, no compiling required:**
 
-**[Download Flinktext.dmg](https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Handsfree.dmg)**
+**[Download Flinktext.dmg](https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Flinktext.dmg)**
 
 **Four modes:**
 - **Raw** : verbatim transcript, no language model.
