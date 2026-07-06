@@ -101,7 +101,9 @@ final class Orchestrator {
             log.info("pipe wav=\(wav.count, privacy: .public)")
 
             guard wav.count > 1024 else {
-                status.state = .error("Aufnahme leer (\(wav.count) B)")
+                status.state = .error(t(
+                    "Aufnahme leer. Die Tastenkombi (z. B. rechte ⌥ + ⇧) gedrückt HALTEN, während du sprichst — erst danach loslassen. Bleibt der Fehler: Mikrofon-Berechtigung in den Systemeinstellungen prüfen.",
+                    "Recording empty. HOLD the key combo (e.g. right ⌥ + ⇧) while speaking — release only when done. If this persists: check the microphone permission in System Settings."))
                 return
             }
 

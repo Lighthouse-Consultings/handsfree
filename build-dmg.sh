@@ -80,6 +80,7 @@ trap 'rm -rf "$STAGE"' EXIT
 cp -R "$APP" "$STAGE/"
 ln -s /Applications "$STAGE/Applications"
 [ -f "$ROOT/LIES_MICH.txt" ] && cp "$ROOT/LIES_MICH.txt" "$STAGE/"
+[ -f "$ROOT/READ_ME.txt" ] && cp "$ROOT/READ_ME.txt" "$STAGE/"
 
 # Remove stale DMGs (hdiutil refuses to overwrite).
 rm -f "$VERSIONED_DMG" "$FLINKTEXT_DMG" "$STABLE_DMG"

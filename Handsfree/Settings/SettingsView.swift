@@ -281,6 +281,12 @@ struct SettingsView: View {
                         Text(t("ausgewählt", "selected")).font(.caption2).padding(.horizontal, 5).padding(.vertical, 1)
                             .background(Color.accentColor.opacity(0.15), in: Capsule())
                     }
+                    if model == .recommended {
+                        Text(t("empfohlen für dein Gerät", "recommended for this device"))
+                            .font(.caption2).padding(.horizontal, 5).padding(.vertical, 1)
+                            .background(.green.opacity(0.15), in: Capsule())
+                            .foregroundStyle(.green)
+                    }
                 }
                 if let p = progress {
                     ProgressView(value: p).progressViewStyle(.linear)

@@ -65,6 +65,7 @@ struct OnboardingView: View {
     let onFinish: () -> Void
 
     @StateObject private var models = WhisperModelManager.shared
+    @ObservedObject private var loc = LocalizationManager.shared
     @State private var micGranted = PermissionCheck.microphone
     @State private var axGranted = PermissionCheck.accessibility
     @State private var inputGranted = PermissionCheck.inputMonitoring
@@ -74,9 +75,7 @@ struct OnboardingView: View {
 
     private let poll = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
 
-    private var recommendedModel: WhisperModel {
-        ProcessInfo.processInfo.physicalMemory >= 16 * 1024 * 1024 * 1024 ? .turbo : .small
-    }
+    private var recommendedModel: WhisperModel { .recommended }
     private var activeModelInstalled: Bool { models.isInstalled(Preferences.whisperModel) }
     private var allDone: Bool { micGranted && axGranted && inputGranted && activeModelInstalled }
 
@@ -164,8 +163,21 @@ struct OnboardingView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(t("Willkommen bei Flinktext", "Welcome to Flinktext"))
-                .font(.title2.bold())
+            HStack(alignment: .top) {
+                Text(t("Willkommen bei Flinktext", "Welcome to Flinktext"))
+                    .font(.title2.bold())
+                Spacer()
+                Picker("", selection: Binding(
+                    get: { LocalizationManager.shared.language },
+                    set: { Preferences.appLanguage = $0 }
+                )) {
+                    Text("Deutsch").tag(AppLanguage.de)
+                    Text("English").tag(AppLanguage.en)
+                }
+                .pickerStyle(.segmented)
+                .frame(width: 160)
+                .labelsHidden()
+            }
             Text(t("Vier Schritte, dann diktierst du in jeder App: Hotkey halten, sprechen, loslassen.",
                    "Four steps and you can dictate in any app: hold the hotkey, speak, release."))
                 .font(.callout).foregroundStyle(.secondary)
@@ -197,6 +209,22 @@ struct OnboardingView: View {
     }
 
     private func modelRow(_ model: WhisperModel) -> some View {
+        Button { primaryAction(model) } label: {
+            modelRowContent(model)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func primaryAction(_ model: WhisperModel) {
+        if models.isInstalled(model) {
+            activate(model)
+        } else if !models.isDownloading(model) {
+            activate(model)
+            models.startDownload(model)
+        }
+    }
+
+    private func modelRowContent(_ model: WhisperModel) -> some View {
         HStack(spacing: 8) {
             Image(systemName: Preferences.whisperModel == model && models.isInstalled(model)
                   ? "largecircle.fill.circle" : "circle")
@@ -218,19 +246,20 @@ struct OnboardingView: View {
                 if Preferences.whisperModel == model {
                     Text(t("Aktiv", "Active")).font(.caption).foregroundStyle(.green)
                 } else {
-                    Button(t("Verwenden", "Use")) { activate(model) }.controlSize(.small)
+                    Button(t("Verwenden", "Use")) { activate(model) }
+                        .buttonStyle(.bordered).controlSize(.small)
                 }
             } else if models.isDownloading(model) {
                 ProgressView(value: models.progress(for: model) ?? 0).frame(width: 90)
-                Button(t("Abbrechen", "Cancel")) { models.cancelDownload(model) }.controlSize(.small)
+                Button(t("Abbrechen", "Cancel")) { models.cancelDownload(model) }
+                    .buttonStyle(.bordered).controlSize(.small)
             } else {
-                Button(t("Laden", "Download")) {
-                    activate(model)
-                    models.startDownload(model)
-                }.controlSize(.small)
+                Button(t("Laden", "Download")) { primaryAction(model) }
+                    .buttonStyle(.borderedProminent).controlSize(.small)
             }
         }
         .padding(.leading, 34)
+        .contentShape(Rectangle())
     }
 
     private func activate(_ model: WhisperModel) {
@@ -245,10 +274,26 @@ struct OnboardingView: View {
                 Text(err).font(.caption).foregroundStyle(.orange)
             }
             Divider()
-            HStack(alignment: .center) {
-                Text(t("Danach: rechte Wahltaste (⌥) halten, sprechen, loslassen.",
-                       "Then: hold the right Option key (⌥), speak, release."))
-                    .font(.caption).foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(t("So diktierst du — Kombination gedrückt HALTEN, sprechen, dann loslassen:",
+                       "How to dictate — HOLD the combination while speaking, then release:"))
+                    .font(.caption.weight(.medium))
+                Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 2) {
+                    GridRow {
+                        Text("⌥ rechts + ⇧").font(.caption.monospaced())
+                        Text(t("Diktat (1:1)", "Dictation (verbatim)")).font(.caption).foregroundStyle(.secondary)
+                        Text("⌥ rechts + ⌃").font(.caption.monospaced())
+                        Text(t("Poliert", "Polished")).font(.caption).foregroundStyle(.secondary)
+                    }
+                    GridRow {
+                        Text("⌥ rechts + ⌥ links").font(.caption.monospaced())
+                        Text("Compose").font(.caption).foregroundStyle(.secondary)
+                        Text("⌥ rechts + ⌘").font(.caption.monospaced())
+                        Text("Emoji").font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+            }
+            HStack {
                 Spacer()
                 Button(t("Später", "Later"), action: onFinish)
                 Button(t("Los geht's", "Let's go"), action: onFinish)

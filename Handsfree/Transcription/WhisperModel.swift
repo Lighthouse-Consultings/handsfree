@@ -9,6 +9,11 @@ enum WhisperModel: String, CaseIterable, Identifiable {
 
     var fileName: String { "ggml-\(rawValue).bin" }
 
+    // Device-based recommendation: Turbo needs headroom, 8 GB Macs choke on it.
+    static var recommended: WhisperModel {
+        ProcessInfo.processInfo.physicalMemory >= 16 * 1024 * 1024 * 1024 ? .turbo : .small
+    }
+
     var displayName: String {
         switch self {
         case .turbo: return "Turbo"

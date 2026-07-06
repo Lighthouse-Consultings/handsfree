@@ -1,5 +1,6 @@
 FLINKTEXT — Diktieren auf dem Mac. Lokal, privat, gratis.
 ==========================================================
+(English guide: see READ_ME.txt)
 
 INSTALLATION
 ------------
@@ -7,16 +8,17 @@ INSTALLATION
 2. Flinktext aus dem Programme-Ordner starten.
    Die App ist mit Apple Developer ID signiert und von Apple notarisiert:
    Es erscheint keine Gatekeeper-Warnung, kein Rechtsklick-Trick noetig.
-3. Beim ersten Start fragt macOS nach drei Berechtigungen:
+3. Beim ersten Start fuehrt dich der Einrichtungs-Assistent durch
+   drei macOS-Berechtigungen:
    - Mikrofon (fuer die Aufnahme)
    - Bedienungshilfen (fuer den globalen Hotkey und Text am Cursor)
    - Eingabeueberwachung (fuer die Hotkey-Erkennung)
-   Alle drei bestaetigen, dann ist Flinktext einsatzbereit.
+   Alle drei bestaetigen und ein Sprachmodell waehlen — fertig.
 
 BEDIENUNG
 ---------
-Rechte Wahltaste (Right-Option) halten, sprechen, loslassen:
-Der Text erscheint am Cursor, in jeder App.
+Die Tastenkombination gedrueckt HALTEN, waehrend du sprichst,
+dann loslassen: Der Text erscheint am Cursor, in jeder App.
 
 Vier Modi ueber Zusatztasten (rechte Wahltaste plus ...):
   + Umschalt (Shift)   Roh: 1:1-Transkript ohne Nachbearbeitung
