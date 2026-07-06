@@ -20,11 +20,16 @@ HOW TO DICTATE
 HOLD the key combination while speaking, release when done:
 The text appears at the cursor, in any app.
 
-Four modes (right Option key plus ...):
-  + Shift (⇧)          Raw: verbatim transcript, no post-processing
-  + Control (⌃)        Polished: cleans up grammar and filler words
-  + left Option (⌥)    Compose: say what should be written
-  + Command (⌘)        Emoji: enriches the text with emojis
+The base key is always the RIGHT Option key (⌥, right of the
+space bar). Hold it and add the second key:
+
+  right ⌥ + ⇧ (Shift) ....... Raw: verbatim transcript, no post-processing
+  right ⌥ + ⌃ (Control) ..... Polished: cleans up grammar and filler words
+  right ⌥ + left ⌥ .......... Compose: say what should be written
+  right ⌥ + ⌘ (Command) ..... Emoji: enriches the text with emojis
+
+Keep both keys held while you speak. Releasing them starts
+the processing.
 
 Speech recognition runs 100 % locally on your device by default.
 No account, no cloud, no telemetry.

@@ -20,11 +20,16 @@ BEDIENUNG
 Die Tastenkombination gedrueckt HALTEN, waehrend du sprichst,
 dann loslassen: Der Text erscheint am Cursor, in jeder App.
 
-Vier Modi ueber Zusatztasten (rechte Wahltaste plus ...):
-  + Umschalt (Shift)   Roh: 1:1-Transkript ohne Nachbearbeitung
-  + Steuerung (Ctrl)   Poliert: glaettet zu sauberem Schriftdeutsch
-  + linke Wahltaste    Compose: du sagst, was geschrieben werden soll
-  + Befehl (Cmd)       Emoji: reichert den Text mit Emojis an
+Basis ist immer die RECHTE Wahltaste (⌥, rechts neben der
+Leertaste). Diese halten und die Zusatztaste dazunehmen:
+
+  ⌥ rechts + ⇧ (Umschalt) .... Roh: 1:1-Transkript ohne Nachbearbeitung
+  ⌥ rechts + ⌃ (Steuerung) ... Poliert: sauberes Schriftdeutsch
+  ⌥ rechts + ⌥ links ......... Compose: du sagst, was geschrieben werden soll
+  ⌥ rechts + ⌘ (Befehl) ...... Emoji: reichert den Text mit Emojis an
+
+Beide Tasten gedrueckt halten, solange du sprichst. Loslassen
+startet die Verarbeitung.
 
 Die Spracherkennung laeuft standardmaessig zu 100 % lokal auf deinem
 Geraet. Kein Konto, keine Cloud, keine Telemetrie.
