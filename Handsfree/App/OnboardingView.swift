@@ -77,8 +77,8 @@ struct OnboardingView: View {
     private var recommendedModel: WhisperModel {
         ProcessInfo.processInfo.physicalMemory >= 16 * 1024 * 1024 * 1024 ? .turbo : .small
     }
-    private var anyModelInstalled: Bool { !models.installed.isEmpty }
-    private var allDone: Bool { micGranted && axGranted && inputGranted && anyModelInstalled }
+    private var activeModelInstalled: Bool { models.isInstalled(Preferences.whisperModel) }
+    private var allDone: Bool { micGranted && axGranted && inputGranted && activeModelInstalled }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -151,6 +151,13 @@ struct OnboardingView: View {
             micGranted = PermissionCheck.microphone
             axGranted = PermissionCheck.accessibility
             inputGranted = PermissionCheck.inputMonitoring
+            models.refreshInstalled()
+            // Selected model missing but another installed? Follow reality — avoids
+            // "model X missing" errors when the user downloaded a different one.
+            if !models.isInstalled(Preferences.whisperModel),
+               let fallback = WhisperModel.allCases.first(where: { models.isInstalled($0) }) {
+                activate(fallback)
+            }
         }
         .onAppear { models.refreshInstalled() }
     }
@@ -166,31 +173,70 @@ struct OnboardingView: View {
     }
 
     private var modelCard: some View {
-        stepCard(
-            index: 4,
-            granted: anyModelInstalled,
-            title: t("Spracherkennungs-Modell", "Speech recognition model"),
-            text: t("Läuft komplett lokal auf deinem Mac. Empfohlen für dein Gerät: \(recommendedModel.displayName) (\(recommendedModel.sizeLabel)).",
-                    "Runs fully locally on your Mac. Recommended for this device: \(recommendedModel.displayName) (\(recommendedModel.sizeLabel)).")
-        ) {
-            if anyModelInstalled {
-                Button(t("Installiert", "Installed")) {}.disabled(true)
-            } else if models.isDownloading(recommendedModel) {
-                HStack(spacing: 8) {
-                    ProgressView(value: models.progress(for: recommendedModel) ?? 0)
-                        .frame(width: 120)
-                    Button(t("Abbrechen", "Cancel")) { models.cancelDownload(recommendedModel) }
-                        .controlSize(.small)
+        GroupBox {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 12) {
+                    Image(systemName: activeModelInstalled ? "checkmark.circle.fill" : "4.circle")
+                        .font(.title2)
+                        .foregroundStyle(activeModelInstalled ? .green : .secondary)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(t("Spracherkennungs-Modell", "Speech recognition model")).font(.body.weight(.medium))
+                        Text(t("Läuft komplett lokal auf deinem Mac. Eines genügt — du kannst später wechseln.",
+                               "Runs fully locally on your Mac. One is enough — you can switch later."))
+                            .font(.caption).foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Spacer()
                 }
-            } else {
-                Button(t("\(recommendedModel.displayName) laden", "Download \(recommendedModel.displayName)")) {
-                    Preferences.whisperModel = recommendedModel
-                    Preferences.backend = .local
-                    Preferences.notifyChanged()
-                    models.startDownload(recommendedModel)
+                ForEach(WhisperModel.allCases) { model in
+                    modelRow(model)
                 }
             }
+            .padding(6)
         }
+    }
+
+    private func modelRow(_ model: WhisperModel) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: Preferences.whisperModel == model && models.isInstalled(model)
+                  ? "largecircle.fill.circle" : "circle")
+                .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 1) {
+                HStack(spacing: 6) {
+                    Text("\(model.displayName) (\(model.sizeLabel))").font(.callout)
+                    if model == recommendedModel {
+                        Text(t("empfohlen für dein Gerät", "recommended for this device"))
+                            .font(.caption2).padding(.horizontal, 5).padding(.vertical, 1)
+                            .background(.green.opacity(0.15), in: Capsule())
+                            .foregroundStyle(.green)
+                    }
+                }
+                Text(model.subtitle).font(.caption2).foregroundStyle(.secondary)
+            }
+            Spacer()
+            if models.isInstalled(model) {
+                if Preferences.whisperModel == model {
+                    Text(t("Aktiv", "Active")).font(.caption).foregroundStyle(.green)
+                } else {
+                    Button(t("Verwenden", "Use")) { activate(model) }.controlSize(.small)
+                }
+            } else if models.isDownloading(model) {
+                ProgressView(value: models.progress(for: model) ?? 0).frame(width: 90)
+                Button(t("Abbrechen", "Cancel")) { models.cancelDownload(model) }.controlSize(.small)
+            } else {
+                Button(t("Laden", "Download")) {
+                    activate(model)
+                    models.startDownload(model)
+                }.controlSize(.small)
+            }
+        }
+        .padding(.leading, 34)
+    }
+
+    private func activate(_ model: WhisperModel) {
+        Preferences.whisperModel = model
+        Preferences.backend = .local
+        Preferences.notifyChanged()
     }
 
     private var footer: some View {
