@@ -36,7 +36,7 @@ Geraet. Kein Konto, keine Cloud, keine Telemetrie.
 
 UPDATE VON HANDSFREE (v0.9.x ODER AELTER)?
 ------------------------------------------
-Flinktext ist der neue Name von Handsfree. Zwei einmalige Hinweise:
+Flinktext ist der neue Name von Handsfree. Drei einmalige Hinweise:
 1. Die alte Handsfree.app im Programme-Ordner loeschen, sonst liegen
    beide Apps nebeneinander.
 2. Falls du API-Schluessel hinterlegt hattest, fragt der macOS-
