@@ -40,6 +40,18 @@ STABLE_DMG="$OUT_DIR/Handsfree.dmg"
 mkdir -p "$OUT_DIR"
 
 # ---------------------------------------------------------------------------
+# Universal gate — release DMGs must contain arm64 + x86_64 for app AND whisper.
+# ---------------------------------------------------------------------------
+APP_EXEC=$(defaults read "$(cd "$APP" && pwd)/Contents/Info" CFBundleExecutable)
+for BIN in "$APP/Contents/MacOS/$APP_EXEC" "$APP/Contents/Resources/whisper-cli"; do
+  BIN_ARCHS="$(lipo -archs "$BIN" 2>/dev/null || echo missing)"
+  if [[ "$BIN_ARCHS" != *arm64* || "$BIN_ARCHS" != *x86_64* ]]; then
+    echo "ERROR: $BIN is not universal (archs: $BIN_ARCHS)"
+    exit 1
+  fi
+done
+
+# ---------------------------------------------------------------------------
 # Sign + notarize the app (skipped with a warning if no Developer ID cert).
 # ---------------------------------------------------------------------------
 IDENTITY=$(security find-identity -v -p codesigning | awk -F'"' '/Developer ID Application/ {print $2; exit}')

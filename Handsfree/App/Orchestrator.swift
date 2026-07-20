@@ -54,7 +54,7 @@ final class Orchestrator {
                 return .missing("Whisper-Modell \(model.displayName) (\(model.fileName)) fehlt — in Einstellungen herunterladen")
             }
             if LocalWhisperClient.detect() == nil {
-                return .missing("whisper-cli nicht gefunden in /opt/homebrew/bin")
+                return .missing("whisper-cli nicht gefunden (weder im App-Bundle noch via Homebrew)")
             }
             return .ok
         }

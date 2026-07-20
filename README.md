@@ -83,7 +83,7 @@ Flinktext ist für datensensible Umgebungen gebaut: Schulen, Behörden, Institut
 ## 🧭 Systemvoraussetzungen
 
 - macOS 14 (Sonoma) oder neuer
-- Apple Silicon (das gebündelte lokale Whisper ist arm64). Intel-Macs können die optionalen Cloud-Backends nutzen.
+- Apple Silicon und Intel (Universal Binary inkl. lokalem Whisper). Auf Intel-Macs läuft Whisper CPU-only; empfohlen ist dort das Small-Modell.
 
 ---
 
@@ -106,7 +106,7 @@ xcodegen generate   # erzeugt das Xcode-Projekt aus project.yml
 xcodebuild -scheme Handsfree -configuration Release build
 ```
 
-Voraussetzungen: Xcode 16+, `xcodegen`. Das Projekt nutzt reines SwiftUI/AppKit ohne externe Abhängigkeiten. Tests laufen über `xcodebuild test -scheme Handsfree -destination 'platform=macOS,arch=arm64'`.
+Voraussetzungen: Xcode 16+, `xcodegen`. Das Projekt nutzt reines SwiftUI/AppKit ohne externe Abhängigkeiten. Tests laufen über `xcodebuild test -scheme Handsfree -destination 'platform=macOS,arch=arm64'`. Release-Builds sind Universal (arm64 + x86_64); der x86_64-Pfad lässt sich auf Apple Silicon per `arch -x86_64` unter Rosetta testen.
 
 ---
 
@@ -143,7 +143,7 @@ Hold a hotkey, speak, release: your text appears at the cursor, in any app. Spee
 
 **Lineage:** Flinktext is the finished version of [Blitztext](https://github.com/cmagnussen/blitztext) by cmagnussen (MIT, 171 stars, 67 forks), which was build-from-source only and is now inactive. MIT permits this derivative. Credit to Blitztext.
 
-**Requirements:** macOS 14+ (Sonoma), Apple Silicon for the bundled local Whisper.
+**Requirements:** macOS 14+ (Sonoma), Apple Silicon or Intel (universal binary incl. bundled local Whisper; on Intel it runs CPU-only, the Small model is recommended there).
 
 **Build from source:** see [above](#build-aus-dem-quellcode-für-entwicklerinnen). Most users should just grab the DMG.
 

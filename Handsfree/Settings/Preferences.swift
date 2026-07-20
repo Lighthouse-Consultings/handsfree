@@ -38,8 +38,8 @@ enum Preferences {
 
     static var whisperModel: WhisperModel {
         get {
-            let raw = UserDefaults.standard.string(forKey: whisperModelKey) ?? WhisperModel.default.rawValue
-            return WhisperModel(rawValue: raw) ?? .default
+            let raw = UserDefaults.standard.string(forKey: whisperModelKey) ?? WhisperModel.recommended.rawValue
+            return WhisperModel(rawValue: raw) ?? .recommended
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: whisperModelKey)

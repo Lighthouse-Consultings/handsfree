@@ -1,6 +1,6 @@
 # Handsfree — Project Instructions
 
-**Current version:** v0.8.0 (tagged 2026-04-26)
+**Current version:** v0.11.0 (Intel-Support, 2026-07-20)
 **Repo:** https://github.com/Lighthouse-Consultings/handsfree (PRIVATE)
 **Latest DMG:** https://github.com/Lighthouse-Consultings/handsfree/releases/latest/download/Handsfree.dmg
 
@@ -11,7 +11,7 @@ Native macOS menu-bar dictation app. Hold a global hotkey, speak, text appears a
 - **Swift 5.9+ / SwiftUI / AppKit hybrid** — min macOS 14 (Sonoma)
 - **Xcode 16+** — project generated via `xcodegen` from `project.yml`
 - **Native SwiftUI only**, no external UI frameworks
-- **Universal binary** (arm64 + x86_64) — but bundled `whisper-cli` is arm64-only
+- **Universal binary** (arm64 + x86_64) — app AND bundled `whisper-cli` (since v0.11.0)
 - **No SPM dependencies** — stdlib only. `soffes/HotKey` evaluated and dropped (NSEvent monitor works fine for our chord pattern)
 
 ## Architecture
@@ -63,7 +63,7 @@ Since ad-hoc signing produces a new cdhash per rebuild, each version-bump breaks
 ```
 
 ## Local Whisper (v0.7.0+)
-Statically-linked whisper-cli lives in `vendor/whisper-cli-static` (2.6 MB, arm64, Metal + BLAS + Accelerate compiled in). Rebuild via `./build-static-whisper.sh`. Bundle into .app via `./bundle-whisper.sh <AppPath>`.
+Statically-linked whisper-cli lives in `vendor/whisper-cli-static` (~5 MB, universal arm64+x86_64 since v0.11.0). arm64 slice: Metal + BLAS + Accelerate. x86_64 slice: CPU-only (Metal OFF — Intel Macs have no ggml-usable Metal; AVX2/FMA/F16C ON, AVX512 OFF — not all macOS-14 Intel CPUs have it and Rosetta can't test it). whisper.cpp pinned to release tag (WHISPER_REF in script). Rebuild via `./build-static-whisper.sh` (two cmake builds + lipo). Bundle into .app via `./bundle-whisper.sh <AppPath>` (hard-fails if binary is not universal). x86 smoke test: `arch -x86_64 vendor/whisper-cli-static --help`.
 
 **Do NOT go back to dynamic linking against brew's whisper-cpp.** The ggml plugin-loader uses a hardcoded `/opt/homebrew/Cellar/ggml/.../libexec` path that doesn't exist on end-user Macs, and `GGML_BACKEND_PATH` env var only accepts single files (not directories). Static linking sidesteps this entirely.
 
@@ -147,7 +147,6 @@ gh release create v<X.Y.Z> \
 
 ## Out of scope (deferred)
 - Apple Developer ID signing + notarization — 99 €/Jahr, end user: no right-click-open, no permission-reset
-- Intel Mac local Whisper (bundled binary is arm64 only — Intel users need brew or Cloud)
 - TTS read-back — Nico explicitly said not needed
 - Windows/Linux — macOS only
 - Dock icon — menubar only (`LSUIElement = YES` in Info.plist)

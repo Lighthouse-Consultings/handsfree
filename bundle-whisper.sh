@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bundle statically-linked whisper-cli into Handsfree.app.
+# Bundle statically-linked universal (arm64 + x86_64) whisper-cli into Handsfree.app.
 # No external dylibs, no ggml backend plugins needed — everything compiled in.
 # Only depends on macOS system frameworks (Accelerate, Metal, Foundation).
 #
@@ -19,6 +19,14 @@ SRC="$(cd "$(dirname "$0")" && pwd)/vendor/whisper-cli-static"
 if [ ! -f "$SRC" ]; then
   echo "Missing static whisper-cli at $SRC"
   echo "Build it first with:  ./build-static-whisper.sh"
+  exit 1
+fi
+
+# Universal gate — a thin arm64 binary must never ship in a release again.
+SRC_ARCHS="$(lipo -archs "$SRC")"
+if [[ "$SRC_ARCHS" != *arm64* || "$SRC_ARCHS" != *x86_64* ]]; then
+  echo "ERROR: $SRC is not universal (archs: $SRC_ARCHS)"
+  echo "Rebuild with:  ./build-static-whisper.sh"
   exit 1
 fi
 

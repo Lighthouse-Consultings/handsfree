@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.11.0 — 2026-07-20 — Intel-Support für lokales Whisper (Universal Binary komplett)
+- **Gebündeltes whisper-cli jetzt Universal (arm64 + x86_64)** — lokales, offline Diktieren funktioniert erstmals auch auf Intel-Macs. Vorher war die App zwar Universal, das lokale Whisper aber Apple-Silicon-only.
+- arm64-Slice unverändert mit Metal-GPU; x86_64-Slice CPU-only (Accelerate/BLAS, AVX2/FMA/F16C; AVX512 bewusst aus — nicht alle unterstützten Intel-CPUs haben es)
+- **Modell-Empfehlung ist jetzt architektur-bewusst:** Auf Intel wird Small statt Turbo empfohlen und beim Erstlauf voreingestellt (Turbo ist CPU-only zu langsam für Diktat, bleibt aber wählbar). Erstlauf-Default folgt generell jetzt der Geräte-Empfehlung — 8-GB-Macs starten mit Small statt Turbo.
+- whisper.cpp auf Release-Tag v1.9.1 gepinnt (vorher master)
+- Build-Skripte mit Universal-Gates: bundle-whisper.sh und build-dmg.sh brechen ab, wenn ein Binary nicht arm64 + x86_64 enthält
+- Fehlermeldung bei fehlendem whisper-cli generisch formuliert (vorher hartkodiert „/opt/homebrew/bin", auf Intel irreführend)
+
 ## v0.9.0 — 2026-05-01 — DE/EN-Umschalter (App-Lokalisierung)
 - **Sprach-Picker oben in den Einstellungen** (System / Deutsch / English) — schaltet die komplette UI-Textdarstellung live um, ohne App-Neustart. Standard `System` folgt der Mac-Sprache.
 - Lokalisierte Bereiche: Menubar-Popover (Header, Status-Label, Update-Banner, Footer), Mode-Untertitel (Sprache rein. Text raus. / Speech in. Text out. usw.), kompletter Settings-Dialog (Transkription, LLM, Stil-Vorgaben, API-Keys, Berechtigungen, Updates, Über), Whisper-Modell-Picker inkl. Status-Labels und Tiny/Small-Warnung.
